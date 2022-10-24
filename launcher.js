@@ -1,7 +1,14 @@
 const { Client, Authenticator } = require('minecraft-launcher-core');
 const launcher = new Client();
 const msmc = require("msmc");
-//msmc's testing enviroment sometimes runs into this issue that it can't load node fetch
+import {CookieManager} from "./modules/cookie-manager.js";
+
+document.querySelector('#mc-btn').addEventListener('click', () =>{
+    startGame();
+})
+
+function startGame() {
+    //msmc's testing enviroment sometimes runs into this issue that it can't load node fetch
 msmc.fastLaunch("raw",
     (update) => {
         //A hook for catching loading bar events and errors, standard with MSMC
@@ -19,9 +26,10 @@ msmc.fastLaunch("raw",
             authorization: msmc.getMCLC().getAuth(result),
             root: "./minecraft",
             version: {
-                number: "1.8.9",
+                number: "1.19.2",
                 type: "release"
             },
+            forge: "forge.jar",
             memory: {
                 max: "6G",
                 min: "4G"
@@ -39,3 +47,4 @@ msmc.fastLaunch("raw",
         //If the login fails
         console.log("We failed to log someone in because : " + reason);
     })
+}
