@@ -1,0 +1,17 @@
+.theme-dark {
+    --background-color: rgb(37, 45, 39);
+    --text-color: #fff;
+}
+
+
+/*apply theme*/
+body {
+    background-color: var(--background-color);
+}
+/**/
+/*dephault*/
+#app {
+    width: 100vw;
+    height: 100vh;
+}
+/**/

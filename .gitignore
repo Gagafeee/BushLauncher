@@ -1,0 +1,55 @@
+# Created by https://www.toptal.com/developers/gitignore/api/meteor,meteorjs,visualstudiocode
+# Edit at https://www.toptal.com/developers/gitignore?templates=meteor,meteorjs,visualstudiocode
+
+### Meteor ###
+# gitignore template for the Meteor framework
+# website: https://www.meteor.com/
+#
+# Recommended template: Node.gitignore
+
+# protect api keys in setting json
+settings-production.json
+settings.json
+
+# protect your mup.json settings
+mup.json
+mup.js
+
+### MeteorJS ###
+# default meteor build and local packages
+.meteor/local
+
+# meteor settings file
+
+# meteor build output files
+*.tar.gz
+
+# general swp files from vim
+*.swp
+
+### VisualStudioCode ###
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+!.vscode/*.code-snippets
+
+# Local History for Visual Studio Code
+.history/
+
+# Built Visual Studio Code Extensions
+*.vsix
+
+### VisualStudioCode Patch ###
+# Ignore all local history of files
+.history
+.ionide
+
+#minecraft
+minecraft
+#output
+out
+#electron lib
+node_modules/electron
+# End of https://www.toptal.com/developers/gitignore/api/meteor,meteorjs,visualstudiocode

@@ -1,0 +1,56 @@
+{
+  "name": "bush-launcher",
+  "version": "0.0.0",
+  "description": "An Minecraft Version, Mods Manager",
+  "main": "main.js",
+  "author": "Gagafeee",
+  "license": "MIT",
+  "scripts": {
+    "start": "electron-forge start",
+    "package": "electron-forge package",
+    "make": "electron-forge make"
+  },
+  "devDependencies": {
+    "@electron-forge/cli": "^6.0.0-beta.67",
+    "@electron-forge/maker-deb": "^6.0.0-beta.67",
+    "@electron-forge/maker-rpm": "^6.0.0-beta.67",
+    "@electron-forge/maker-squirrel": "^6.0.0-beta.67",
+    "@electron-forge/maker-zip": "^6.0.0-beta.67",
+    "electron": "^21.2.0"
+  },
+  "dependencies": {
+    "browserify": "^17.0.0",
+    "electron-squirrel-startup": "^1.0.0",
+    "minecraft-launcher-core": "^3.16.16",
+    "msmc": "^3.1.3",
+    "node-fetch": "^3.2.10",
+    "original-fs": "^1.2.0"
+  },
+  "config": {
+    "forge": {
+      "packagerConfig": {},
+      "makers": [
+        {
+          "name": "@electron-forge/maker-squirrel",
+          "config": {
+            "name": "minecraft_manager"
+          }
+        },
+        {
+          "name": "@electron-forge/maker-zip",
+          "platforms": [
+            "darwin"
+          ]
+        },
+        {
+          "name": "@electron-forge/maker-deb",
+          "config": {}
+        },
+        {
+          "name": "@electron-forge/maker-rpm",
+          "config": {}
+        }
+      ]
+    }
+  }
+}
