@@ -11,9 +11,13 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="author" content="Gagafeee">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <script src="https://kit.fontawesome.com/1c9144b004.js" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/purecss@2.2.0/build/pure-min.css">
     <link rel="stylesheet" href="./style.css">
     <script src="bundle.js"></script>
+    <script src="./menu-functions.js"></script>
+    <script type="module" src="./launcher.js"></script>
 
 </head>
 
@@ -21,17 +25,57 @@
     <!--[if lt IE 7]>
             <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="#">upgrade your browser</a> to improve your experience.</p>
         <![endif]-->
+
+    <div id="loading-panel" data-show="true">
+        <div class="img pop"></div>
+    </div>
+
     <div id="app">
-        <div id="side-menu"></div>
-        <div id="MainContainer">
-            <div class="pure-button" id="mc-btn">Start Minecraft vanilla</div>
+        <div id="menu-bar">
+            <div class="left" role="menu">
+                <div class="img" id="menu-btn"></div>
+                <p>Bush Launcher</p>
+                <p class="app-version"></p>
+            </div>
+            <div class="right">
+                <button class="menubar-btn" id="minimize-btn"><i class="fas fa-window-minimize"></i></button>
+                <button class="menubar-btn" id="max-unmax-btn"><i class="far fa-square"></i></button>
+                <button class="menubar-btn" id="close-btn"><i class="fas fa-times"></i></button>
+            </div>
+        </div>
+        <div id="authPanel">
+            <div class="content">
+                <div class="title-container">
+                    <div class="img"></div>
+                    <div class="textes">
+                        <p class="title">Bush Launcher</p>
+                        <p class="version app-version">0.0.0</p>
+                    </div>
+                </div>
+                <div class="login-content">
+                    <p class="title">Login:</p>
+                    <div class="h-line" style="width: 70%; margin-top: -3%;"></div>
+                    <section class="auth-container">
+                        <div class="btn-log-microsoft">
+                            <div class="img"></div>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </div>
+        <div id="layout">
+            <div id="side-menu"></div>
+            <div id="MainContainer">
+                <div class="pure-button" id="mc-btn">Start Minecraft vanilla 1.19.2</div>
+                <div class="pure-button" id="mc-btn-forge">Start Minecraft Forge 1.12.2</div>
+            </div>
         </div>
     </div>
 
 
+
     <!-- You can also require other files to run in this process -->
-    <!--<script src="./renderer.js"></script>-->
-    <script type="module" src="./launcher.js"></script>
+    <script src="./renderer.js"></script>
 </body>
 
 </html>

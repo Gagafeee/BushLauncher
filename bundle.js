@@ -724,8 +724,22 @@ process.umask = function() { return 0; };
 // main.js
 
 // Modules to control application life and create native browser window
-const { app, BrowserWindow } = require('electron')
+const { app, BrowserWindow, Menu, ipcMain } = require('electron')
 const path = require('path')
+
+const isMac = process.platform === "darwin";
+
+const template = [{
+    label: "File",
+    submenu: [isMac ? { role: "close" } : { role: "quit" }],
+}, ];
+
+const menu = Menu.buildFromTemplate(template);
+Menu.setApplicationMenu(menu);
+
+module.exports = {
+    menu,
+};
 
 const createWindow = () => {
     // Create the browser window.
@@ -736,7 +750,10 @@ const createWindow = () => {
             preload: path.join(__dirname, 'preload.js'),
             nodeIntegration: true,
             contextIsolation: false,
-        }
+        },
+        frame: false,
+        titleBarStyle: 'hidden',
+        backgroundColor: '#252d27'
     })
 
     // and load the index.html of the app.
@@ -745,6 +762,17 @@ const createWindow = () => {
     // Open the DevTools.
     mainWindow.webContents.openDevTools()
 }
+
+// Register an event listener. When ipcRenderer sends mouse click co-ordinates, show menu at that position.
+ipcMain.on(`display-app-menu`, function(e, args) {
+    if (isWindows && mainWindow) {
+      menu.popup({
+        window: mainWindow,
+        x: args.x,
+        y: args.y
+      });
+    }
+  });
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
