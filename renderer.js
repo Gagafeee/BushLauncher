@@ -28,6 +28,11 @@ window.addEventListener("DOMContentLoaded", () => {
         })
         //
         /*menu */
+    document.querySelector("#menu-bar").addEventListener("dblclick", () => {
+        ipcRenderer.invoke("isWindowMaximized").then((isMaximized) => {
+            ipcRenderer.postMessage(isMaximized ? "unmaximize-window" : "maximize-window");
+        })
+    })
     document.querySelector("#close-btn").addEventListener("click", () => {
         ipcRenderer.postMessage("close-app");
     });
@@ -41,7 +46,6 @@ window.addEventListener("DOMContentLoaded", () => {
             })
             ipcRenderer.invoke("isWindowMaximized").then((isMaximized) => {
                 // Change the middle maximize-unmaximize icons.
-                console.log(!isMaximized);
                 if (!isMaximized) {
                     icon.classList.remove("fa-square");
                     icon.classList.add("fa-clone");
