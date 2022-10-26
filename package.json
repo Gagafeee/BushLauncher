@@ -1,6 +1,6 @@
 {
   "name": "bush-launcher",
-  "version": "0.1",
+  "version": "0.1.5",
   "description": "An Minecraft Version, Mods Manager",
   "main": "main.js",
   "author": "Gagafeee",
@@ -27,7 +27,8 @@
     "msmc": "^3.1.3",
     "node-fetch": "^3.2.10",
     "original-fs": "^1.2.0",
-    "os": "^0.1.2"
+    "os": "^0.1.2",
+    "robloach-datfile": "^2.3.0"
   },
   "config": {
     "forge": {

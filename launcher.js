@@ -21,6 +21,7 @@ const ClientVersion = {
 const getAppDataPath = require('appdata-path');
 const shell = require('electron').shell;
 const JavaVersion = 19;
+const { notificationsManager, NotificationsType } = require('./modules/notifications/notifications');
 
 function StartGame(clientType, version) {
     Object.freeze(ClientType);
@@ -115,7 +116,7 @@ function CheckJava() {
         if (os.platform() == 'win32') {
             fs.access(`C:/Program Files/Java/jdk-` + JavaVersion + `/bin/javaw.exe`, (err) => {
                 if (err) {
-                    alert("Please update Java to version " + JavaVersion + " (and restart)")
+                    notificationsManager.CreateNotification(NotificationsType.Error, "Please update Java to version " + JavaVersion + " (and restart)")
                     shell.openExternal("https://www.oracle.com/java/technologies/downloads/#jdk" + JavaVersion)
                     reject();
                 } else {

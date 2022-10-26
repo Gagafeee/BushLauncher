@@ -11,7 +11,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="author" content="Gagafeee">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    
+
     <script src="https://kit.fontawesome.com/1c9144b004.js" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/purecss@2.2.0/build/pure-min.css">
     <link rel="stylesheet" href="./style.css">
@@ -63,19 +63,66 @@
                 </div>
             </div>
         </div>
-        <div id="layout">
-            <div id="side-menu"></div>
+
+        <div id="launcher">
+            <div id="up-menu">
+                <div id="account" data-open="false" data-e="false">
+                    <div class="content">
+                        <div class="img">
+                            <img id="userImage" src="https://minecraft-api.com/api/skins/notch/head/0/0">
+                        </div>
+                        <p class="username">uname</p>
+                        <div class="arrow-down img"></div>
+                    </div>
+                    <div class="dropper">
+                        <div class="button btn-logout">
+                            <div class="img" style="background: var(--red);
+                            -webkit-mask-image: url(./ressources/graphics/icons/leave.svg);
+                            mask-image: url(./ressources/graphics/icons/leave.svg);"></div>
+                            <p style="color:var(--red);">Log Out</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="side-menu">
+                <div class="version-type selected">
+                    <div class="img" style="background-image: url('./ressources/graphics/images/grass_block.webp')"></div>
+                    <p class="name">Vanilla</p>
+                </div>
+                <div class="version-type">
+                    <div class="img" style="background-image: url('./ressources/graphics/images/forge_logo.png')"></div>
+                    <p class="name">Forge</p>
+                </div>
+            </div>
             <div id="MainContainer">
-                <div class="pure-button" id="mc-btn">Start Minecraft vanilla 1.19.2</div>
+                <!--<div class="pure-button" id="mc-btn">Start Minecraft vanilla 1.19.2</div>
                 <div class="pure-button" id="mc-btn-forge">Start Minecraft Forge 1.12.2</div>
+                -->
+                <div class="content show" id="vanilla-container">
+                    <div class="img logo"></div>
+                    <div class="button">Lunch</div>
+                </div>
+                <div class="content" id="forge-container">
+                    <p>Tose</p>
+                </div>
             </div>
         </div>
     </div>
+    <!--Modules-->
+    <link rel="stylesheet" href="./modules/notifications/notifications.css">
+    <div id="notification-container"></div>
+    <script src="./modules/notifications/notifications.js"></script>
 
 
 
     <!-- You can also require other files to run in this process -->
     <script src="./renderer.js"></script>
+    <script>
+        /*Array.from(document.querySelector("#app").children).forEach((e) => {
+                                    e.style.opacity = null;
+                                })
+                                loadPanel.dataset.show = false;*/
+    </script>
 </body>
 
 </html>

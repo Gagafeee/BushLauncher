@@ -16,6 +16,7 @@ const logginSaveManager = new DataManager({
 const { StartGame, ClientType, ClientVersion } = require("./launcher");
 const auth = new Auth();
 
+
 window.addEventListener("DOMContentLoaded", () => {
     //LOAD
     //
@@ -64,6 +65,7 @@ window.addEventListener("DOMContentLoaded", () => {
                 auth.LogIn("Microsoft")
                     .then(() => {
                         document.querySelector('#authPanel').style.display = "none";
+                        e.firstElementChild.style.backgroundImage = null;
                     })
                     .catch((error) => {
                         console.error("cannot Login: " + error);
@@ -71,12 +73,20 @@ window.addEventListener("DOMContentLoaded", () => {
                     })
             })
         })
-        //
+        //logout buttons
+    Array.from(document.getElementsByClassName("btn-logout")).forEach((e) => {
+            e.addEventListener("click", () => {
+                e.querySelector(".img").style.backgroundImage = "url(./ressources/graphics/icons/loading.svg)";
+                auth.logOut();
+                e.querySelector(".img").style.backgroundImage = null;
+            })
+        })
         /*reauth user (if is posible) */
     if (auth.isLogged()) {
         console.log("detecting save, trying to login...");
         if (auth.isAccountValid(logginSaveManager.get("loggedUser"))) {
             //the accont is valid, we can use it to launch
+            auth.LogIn("internal", logginSaveManager.get("loggedUser"));
             console.log("Is valid: using: " + logginSaveManager.get("loggedUser").profile.name);
             //hide login panel
             document.querySelector('#authPanel').style.display = 'none';
@@ -88,13 +98,17 @@ window.addEventListener("DOMContentLoaded", () => {
     }
     //
     /*Lunch Button */
-    document.querySelector('#mc-btn').addEventListener('click', () => {
-        StartGame(ClientType.VANILLA, ClientVersion[1192]);
-    })
-    document.querySelector('#mc-btn-forge').addEventListener('click', () => {
+    if (document.querySelector("#mc-btn") != null) {
+        document.querySelector('#mc-btn').addEventListener('click', () => {
+            StartGame(ClientType.VANILLA, ClientVersion[1192]);
+        })
+    }
+    if (document.querySelector("#mc-btn-forge") != null) {
+        document.querySelector('#mc-btn-forge').addEventListener('click', () => {
             StartGame(ClientType.FORGE, ClientVersion[1192]);
         })
-        //
+    }
+    //
     setTimeout(() => {
 
         Array.from(document.querySelector("#app").children).forEach((e) => {

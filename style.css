@@ -20,9 +20,12 @@
 
 .theme-dark {
     --background-color: #252d27;
+    --hover-color: #464444;
     --black: #302F2F;
+    --dark-black: #1E1D1D;
     --main-green: #1E954D;
     --text-color: #fff;
+    --red: #dd5c5c;
 }
 
 
@@ -61,11 +64,13 @@ h6 {
     height: calc(100vh - 30px);
     margin-top: 30px;
 }
+
 #layout {
     width: 100vw;
     height: 100%;
     background-color: var(--background-color);
 }
+
 #layout #MainContainer {
     width: 100vw;
     height: 100vh;
@@ -104,6 +109,7 @@ h6 {
     font-size: 1em;
     font-family: Terabite;
 }
+
 #menu-bar .app-version {
     font-family: SquareFont;
     margin-left: 5px;
@@ -146,9 +152,11 @@ h6 {
 
 
 /*Loading panel*/
-#loading-panel[data-show="false"]{
+
+#loading-panel[data-show="false"] {
     display: none;
 }
+
 #loading-panel {
     width: 100vw;
     height: 100vh;
@@ -168,6 +176,7 @@ h6 {
     background-size: contain;
     animation: popup 1s ease-in-out;
 }
+
 #loading-panel .img {
     background-image: url(./ressources/graphics/icon.png);
     width: 50vw;
@@ -175,19 +184,21 @@ h6 {
     background-size: contain;
     animation: zoom 1s ease-in-out infinite;
 }
+
 @keyframes popup {
-    0%{
+    0% {
         transform: scale(0);
     }
 }
+
 @keyframes zoom {
-    0%{
+    0% {
         transform: scale(1)
     }
-    50%{
+    50% {
         transform: scale(1.015)
     }
-    100%{
+    100% {
         transform: scale(1)
     }
 }
@@ -212,6 +223,7 @@ h6 {
     display: flex;
     justify-content: center;
     align-items: center;
+    z-index: 20;
 }
 
 #authPanel .content {
@@ -295,7 +307,7 @@ h6 {
 }
 
 #authPanel .content .login-content .auth-container .btn-log-microsoft {
-    width: 10vw; 
+    width: 10vw;
     height: 10vw;
     border-radius: 50%;
     /* From https://css.glass */
@@ -307,6 +319,7 @@ h6 {
     transition: all 0.5s;
     cursor: pointer;
 }
+
 #authPanel .content .login-content .auth-container .btn-log-microsoft .img {
     background-image: url(./ressources/graphics/icons/microsoft.svg);
     width: 90%;
@@ -325,14 +338,222 @@ h6 {
     display: block;
     width: 10vw;
     height: 10vw;
-    background: linear-gradient(159deg, rgba(255,87,34,1) 0%, rgba(76,175,80,1) 100%);
+    background: linear-gradient(159deg, rgba(255, 87, 34, 1) 0%, rgba(76, 175, 80, 1) 100%);
     filter: blur(20px);
     opacity: 0.4;
     transition: opacity 0.3s;
 }
 
-#authPanel .content .login-content .auth-container .btn-log-microsoft:hover::before{
+#authPanel .content .login-content .auth-container .btn-log-microsoft:hover::before {
     opacity: 1;
+}
+
+
+/**/
+
+
+/*Launcher*/
+
+
+/*In launcher*/
+
+#launcher {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    background-image: url('./ressources/graphics/backgrounds/java.png');
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+#launcher #side-menu {
+    height: 100%;
+    width: 20%;
+    background-color: var(--dark-black);
+}
+
+#launcher #up-menu {
+    height: 8vh;
+    padding: 0 2% 0 2%;
+    /*background-color: red;*/
+    display: flex;
+    align-items: center;
+    flex-direction: row-reverse;
+    position: absolute;
+    right: 0;
+    top: 30px;
+    background-color: var(--background-color);
+    border-radius: 0 0 0 10px;
+    z-index: 10;
+}
+
+
+/*Up Menu*/
+
+#launcher #up-menu #account {
+    height: 100%;
+    min-width: 10vw;
+    /*background-color: aqua;*/
+}
+
+#launcher #up-menu #account .content {
+    height: 100%;
+    width: 100%;
+    /*background-color: green;*/
+    display: flex;
+    align-items: center;
+}
+
+#launcher #up-menu #account .content .img:nth-child(1) {
+    width: 5vh;
+    height: 5vh;
+    background-color: gainsboro;
+    margin-right: 1vw;
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+#launcher #up-menu #account .content .img:nth-child(1) img {
+    width: 100%;
+    height: 100%;
+}
+
+#launcher #up-menu #account:hover .content .arrow-down,
+#launcher #up-menu #account[data-open="true"] .content .arrow-down {
+    transform: translateY(3px)
+}
+
+#launcher #up-menu #account .content .arrow-down {
+    width: 3vh;
+    height: 3vh;
+    background-image: url(./ressources/graphics/icons/arrow_down.svg);
+    transition: all 0.5s;
+}
+
+#launcher #up-menu #account .content .username {
+    font-family: SquareFont;
+    font-size: 2.5vh;
+    margin-right: 1vw;
+}
+
+#launcher #up-menu #account[data-open="false"] .dropper {
+    display: none;
+}
+
+#launcher #up-menu #account[data-open="true"] .dropper {
+    width: 126%;
+    min-height: 110%;
+    background-color: var(--dark-black);
+    position: relative;
+    left: -13%;
+    padding-top: 1.5vh;
+    border-radius: 0 0 5px 5px;
+}
+
+#launcher #up-menu #account .dropper .button {
+    width: 100%;
+    height: 7vh;
+    background-color: var(--background-color);
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    transition: all 0.5s;
+    border-radius: 5px;
+}
+
+#launcher #up-menu #account .dropper .button:hover {
+    transform: translateX(-3px);
+    background-color: var(--hover-color);
+}
+
+#launcher #up-menu #account .dropper .button .img {
+    width: 4vh;
+    height: 4vh;
+    -webkit-mask-size: cover;
+}
+
+#launcher #up-menu #account .dropper .button p {
+    font-family: SquareFont;
+    font-size: 2.5vh;
+}
+
+
+/*Side Menu*/
+
+#launcher #side-menu .version-type {
+    width: 100%;
+    height: 8vh;
+    /* background-color: orangered;*/
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#launcher #side-menu .version-type.selected {
+    background-color: var(--hover-color);
+}
+
+#launcher #side-menu .version-type .img {
+    width: 6vh;
+    height: 6vh;
+    /*background-color: gainsboro;*/
+}
+
+#launcher #side-menu .version-type .name {
+    width: 50%;
+    text-align: center;
+    font-family: SquareFont;
+    font-size: 2.5vh;
+    /*background-color: maroon;*/
+}
+
+
+/*Main Container*/
+
+#launcher #MainContainer {
+    height: 100%;
+    width: 80%;
+    backdrop-filter: blur(2px);
+}
+
+#launcher #MainContainer .content {
+    display: none;
+}
+
+#launcher #MainContainer .content.show {
+    width: 100%;
+    height: 100%;
+    /*background-color: red;*/
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+
+/*Vanilla style*/
+
+
+/**/
+
+#launcher #MainContainer .content.show#vanilla-container .logo {
+    width: 45%;
+    height: 20%;
+    background-image: url(./ressources/graphics/images/minecraft_java_logo.svg);
+    /*background-color: orange;*/
+    margin-top: 10vh;
+}
+
+#launcher #MainContainer .content.show#vanilla-container .button {
+    width: 30vw;
+    height: 10vh;
+    background-color: var(--main-green);
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    top: 40%;
+    border-radius: 20px;
+    padding: 5px;
 }
 
 

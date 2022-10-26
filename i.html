@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]>      <html class="no-js"> <--<![endif]-->
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>Bush Launcher</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="author" content="Gagafeee">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <script src="https://kit.fontawesome.com/1c9144b004.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/purecss@2.2.0/build/pure-min.css">
+    <link rel="stylesheet" href="./style.css">
+    <script src="bundle.js"></script>
+    <script src="./menu-functions.js"></script>
+    <script type="module" src="./launcher.js"></script>
+
+</head>
+
+<body class="theme-dark">
+    <!--[if lt IE 7]>
+            <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="#">upgrade your browser</a> to improve your experience.</p>
+        <![endif]-->
+
+    <!--<div id="loading-panel" data-show="true">
+        <div class="img pop"></div>
+    </div>-->
+
+    <div id="app">
+        <div id="menu-bar">
+            <div class="left" role="menu">
+                <div class="img" id="menu-btn"></div>
+                <p>Bush Launcher</p>
+                <p class="app-version"></p>
+            </div>
+            <div class="right">
+                <button class="menubar-btn" id="minimize-btn"><i class="fas fa-window-minimize"></i></button>
+                <button class="menubar-btn" id="max-unmax-btn"><i class="far fa-square"></i></button>
+                <button class="menubar-btn" id="close-btn"><i class="fas fa-times"></i></button>
+            </div>
+        </div>
+        <!--- <div id="authPanel">
+            <div class="content">
+                <div class="title-container">
+                    <div class="img"></div>
+                    <div class="textes">
+                        <p class="title">Bush Launcher</p>
+                        <p class="version app-version">0.0.0</p>
+                    </div>
+                </div>
+                <div class="login-content">
+                    <p class="title">Login:</p>
+                    <div class="h-line" style="width: 70%; margin-top: -3%;"></div>
+                    <section class="auth-container">
+                        <div class="btn-log-microsoft">
+                            <div class="img"></div>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </div>
+-->
+        <div id="launcher">
+            <div id="up-menu">
+                <div id="account" data-open="true">
+                    <div class="content">
+                        <div class="img">
+                            <img id="userImage">
+                        </div>
+                        <p class="username">Gagafeee</p>
+                        <div class="arrow-down img"></div>
+                    </div>
+                    <div class="dropper">
+                        <div class="button" id="logout">
+                            <div class="img" style="background: var(--red);
+                            -webkit-mask-image: url(./ressources/graphics/icons/leave.svg);
+                            mask-image: url(./ressources/graphics/icons/leave.svg);"></div>
+                            <p style="color:var(--red);">Log Out</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="side-menu">
+                <div class="version-type selected">
+                    <div class="img" style="background-image: url('./ressources/graphics/images/grass_block.webp')"></div>
+                    <p class="name">Vanilla</p>
+                </div>
+                <div class="version-type">
+                    <div class="img" style="background-image: url('./ressources/graphics/images/forge_logo.png')"></div>
+                    <p class="name">Forge</p>
+                </div>
+            </div>
+            <div id="MainContainer">
+                <!--<div class="pure-button" id="mc-btn">Start Minecraft vanilla 1.19.2</div>
+                <div class="pure-button" id="mc-btn-forge">Start Minecraft Forge 1.12.2</div>
+                -->
+                <div class="content show" id="vanilla-container">
+                    <div class="img logo"></div>
+                    <div class="button">Lunch</div>
+                </div>
+                <div class="content" id="forge-container">
+                    <p>Tose</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--Modules-->
+    <link rel="stylesheet" href="./modules/notifications/notifications.css">
+    <div id="notification-container"></div>
+    <script src="./modules/notifications/notifications.js"></script>
+
+
+
+    <!-- You can also require other files to run in this process -->
+    <script src="./renderer.js"></script>
+    <script>
+        Array.from(document.querySelector("#app").children).forEach((e) => {
+            e.style.opacity = null;
+        })
+        loadPanel.dataset.show = false;
+    </script>
+</body>
+
+</html>
