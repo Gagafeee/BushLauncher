@@ -51,5 +51,5 @@ minecraft
 #output
 out
 #electron lib
-node_modules/electron
+node_modules/electron/dist/electron.exe
 # End of https://www.toptal.com/developers/gitignore/api/meteor,meteorjs,visualstudiocode
