@@ -52,4 +52,6 @@ minecraft
 out
 #electron lib
 node_modules/electron/dist/electron.exe
+#local save
+logged-users.json
 # End of https://www.toptal.com/developers/gitignore/api/meteor,meteorjs,visualstudiocode
