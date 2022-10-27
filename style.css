@@ -24,6 +24,7 @@
     --black: #302F2F;
     --dark-black: #1E1D1D;
     --main-green: #1E954D;
+    --hover-green: #3cb36c;
     --text-color: #fff;
     --red: #dd5c5c;
 }
@@ -44,6 +45,12 @@ body {
 
 .h-line {
     height: 1px;
+    background-color: var(--text-color);
+    border-radius: 10px;
+}
+
+.v-line {
+    width: 1px;
     background-color: var(--text-color);
     border-radius: 10px;
 }
@@ -342,6 +349,7 @@ h6 {
     filter: blur(20px);
     opacity: 0.4;
     transition: opacity 0.3s;
+    border-radius: 50%;
 }
 
 #authPanel .content .login-content .auth-container .btn-log-microsoft:hover::before {
@@ -394,6 +402,7 @@ h6 {
 #launcher #up-menu #account {
     height: 100%;
     min-width: 10vw;
+    cursor: pointer;
     /*background-color: aqua;*/
 }
 
@@ -428,7 +437,7 @@ h6 {
     width: 3vh;
     height: 3vh;
     background-image: url(./ressources/graphics/icons/arrow_down.svg);
-    transition: all 0.5s;
+    transition: transform 0.5s;
 }
 
 #launcher #up-menu #account .content .username {
@@ -483,14 +492,21 @@ h6 {
 
 #launcher #side-menu .version-type {
     width: 100%;
-    height: 8vh;
+    height: 9vh;
     /* background-color: orangered;*/
     display: flex;
     align-items: center;
     justify-content: center;
+    cursor: pointer;
+    transition: background-color 0.3s;
 }
 
 #launcher #side-menu .version-type.selected {
+    background-color: var(--hover-color);
+    cursor: default;
+}
+
+#launcher #side-menu .version-type:hover {
     background-color: var(--hover-color);
 }
 
@@ -517,11 +533,11 @@ h6 {
     backdrop-filter: blur(2px);
 }
 
-#launcher #MainContainer .content {
+#launcher #MainContainer .container {
     display: none;
 }
 
-#launcher #MainContainer .content.show {
+#launcher #MainContainer .container.show {
     width: 100%;
     height: 100%;
     /*background-color: red;*/
@@ -533,10 +549,7 @@ h6 {
 
 /*Vanilla style*/
 
-
-/**/
-
-#launcher #MainContainer .content.show#vanilla-container .logo {
+#launcher #MainContainer .container.show#VANILLA-container .logo {
     width: 45%;
     height: 20%;
     background-image: url(./ressources/graphics/images/minecraft_java_logo.svg);
@@ -544,17 +557,246 @@ h6 {
     margin-top: 10vh;
 }
 
-#launcher #MainContainer .content.show#vanilla-container .button {
+#launcher #MainContainer .container.show#VANILLA-container .button {
     width: 30vw;
     height: 10vh;
     background-color: var(--main-green);
     position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
     top: 40%;
     border-radius: 20px;
-    padding: 5px;
+    display: flex;
+    transition: all 0.5s;
+}
+
+#launcher #MainContainer .container.show#VANILLA-container .button[data-open="true"] {
+    border-radius: 20px 20px 20px 0;
+}
+
+#launcher #MainContainer .container.show#VANILLA-container .button .launch {
+    height: 100%;
+    width: 45%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: SquareFont;
+    border-radius: 0 20px 20px 0;
+    font-size: 3.5vh;
+    transition: all 0.5s;
+}
+
+#launcher #MainContainer .container.show#VANILLA-container .button .launch:hover {
+    width: 70%;
+    background-color: var(--hover-green);
+}
+
+#launcher #MainContainer .container.show#VANILLA-container .button .launch p {
+    transition: all 0.3s;
+}
+
+#launcher #MainContainer .container.show#VANILLA-container .button .launch:hover p {
+    transform: scale(1.05);
+}
+
+#launcher #MainContainer .container.show#VANILLA-container .button .version-selector {
+    height: 100%;
+    width: 55%;
+    border-radius: 20px 0 0 20px;
+}
+
+#launcher #MainContainer .container.show#VANILLA-container .button .version-selector .content {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+}
+
+#launcher #MainContainer .container.show#VANILLA-container .button .version-selector .content .img {
+    background-image: url(./ressources/graphics/icons/arrow_down.svg);
+    width: 3.5vh;
+    height: 3.5vh;
+    transition: all 0.3s;
+}
+
+#launcher #MainContainer .container.show#VANILLA-container .button[data-open="true"] .version-selector .content .img,
+#launcher #MainContainer .container.show#VANILLA-container .button .version-selector:hover .content .img {
+    transform: translateY(2px);
+}
+
+#launcher #MainContainer .container.show#VANILLA-container .button .version-selector .content .version {
+    font-size: 4vh;
+    font-family: SquareFont;
+    margin-right: 2vh;
+}
+
+#launcher #MainContainer .container.show#VANILLA-container .button[data-open="false"] .version-selector .dropper {
+    display: none;
+}
+
+#launcher #MainContainer .container.show#VANILLA-container .button[data-open="true"] .version-selector .dropper {
+    width: 100%;
+    min-height: 100%;
+    background-color: var(--background-color);
+    padding-bottom: 1vh;
+    overflow-y: scroll;
+    border-radius: 0 0 20px 20px
+}
+
+#launcher #MainContainer .container.show#VANILLA-container .button .version-selector .dropper .version {
+    width: 100%;
+    height: 7vh;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    transition: all 0.3s;
+}
+#launcher #MainContainer .container.show#VANILLA-container .button .version-selector .dropper .version.selected {
+    background-color: var(--hover-green);
+}
+#launcher #MainContainer .container.show#VANILLA-container .button .version-selector .dropper .version.selected:hover {
+    background-color: var(--hover-green);
+}
+#launcher #MainContainer .container.show#VANILLA-container .button .version-selector .dropper .version:hover {
+    background-color: var(--hover-color);
+}
+
+#launcher #MainContainer .container.show#VANILLA-container .button .version-selector .dropper .version .img {
+    background-image: url(./ressources/graphics/icons/done.svg);
+    width: 3vh;
+    height: 3vh;
+}
+
+#launcher #MainContainer .container.show#VANILLA-container .button .version-selector .dropper .version p {
+    margin-left: 2vh;
+    font-size: 3.5vh;
+    font-family: SquareFont;
+}
+
+/*Forge style*/
+
+#launcher #MainContainer .container.show#FORGE-container .logo {
+    width: 45%;
+    height: 20%;
+    background-image: url(./ressources/graphics/images/minecraft_java_logo.svg);
+    /*background-color: orange;*/
+    margin-top: 10vh;
+}
+
+#launcher #MainContainer .container.show#FORGE-container .button {
+    width: 30vw;
+    height: 10vh;
+    background-color: var(--main-green);
+    position: absolute;
+    top: 40%;
+    border-radius: 20px;
+    display: flex;
+    transition: all 0.5s;
+}
+
+#launcher #MainContainer .container.show#FORGE-container .button[data-open="true"] {
+    border-radius: 20px 20px 20px 0;
+}
+
+#launcher #MainContainer .container.show#FORGE-container .button .launch {
+    height: 100%;
+    width: 45%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: SquareFont;
+    border-radius: 0 20px 20px 0;
+    font-size: 3.5vh;
+    transition: all 0.5s;
+}
+
+#launcher #MainContainer .container.show#FORGE-container .button .launch:hover {
+    width: 70%;
+    background-color: var(--hover-green);
+}
+
+#launcher #MainContainer .container.show#FORGE-container .button .launch p {
+    transition: all 0.3s;
+}
+
+#launcher #MainContainer .container.show#FORGE-container .button .launch:hover p {
+    transform: scale(1.05);
+}
+
+#launcher #MainContainer .container.show#FORGE-container .button .version-selector {
+    height: 100%;
+    width: 55%;
+    border-radius: 20px 0 0 20px;
+}
+
+#launcher #MainContainer .container.show#FORGE-container .button .version-selector .content {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+}
+
+#launcher #MainContainer .container.show#FORGE-container .button .version-selector .content .img {
+    background-image: url(./ressources/graphics/icons/arrow_down.svg);
+    width: 3.5vh;
+    height: 3.5vh;
+    transition: all 0.3s;
+}
+
+#launcher #MainContainer .container.show#FORGE-container .button[data-open="true"] .version-selector .content .img,
+#launcher #MainContainer .container.show#FORGE-container .button .version-selector:hover .content .img {
+    transform: translateY(2px);
+}
+
+#launcher #MainContainer .container.show#FORGE-container .button .version-selector .content .version {
+    font-size: 4vh;
+    font-family: SquareFont;
+    margin-right: 2vh;
+}
+
+#launcher #MainContainer .container.show#FORGE-container .button[data-open="false"] .version-selector .dropper {
+    display: none;
+}
+
+#launcher #MainContainer .container.show#FORGE-container .button[data-open="true"] .version-selector .dropper {
+    width: 100%;
+    min-height: 100%;
+    background-color: var(--background-color);
+    padding-bottom: 1vh;
+    overflow-y: scroll;
+    border-radius: 0 0 20px 20px
+}
+
+#launcher #MainContainer .container.show#FORGE-container .button .version-selector .dropper .version {
+    width: 100%;
+    height: 7vh;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    transition: all 0.3s;
+}
+#launcher #MainContainer .container.show#FORGE-container .button .version-selector .dropper .version.selected {
+    background-color: var(--hover-green);
+}
+#launcher #MainContainer .container.show#FORGE-container .button .version-selector .dropper .version.selected:hover {
+    background-color: var(--hover-green);
+}
+#launcher #MainContainer .container.show#FORGE-container .button .version-selector .dropper .version:hover {
+    background-color: var(--hover-color);
+}
+
+#launcher #MainContainer .container.show#FORGE-container .button .version-selector .dropper .version .img {
+    background-image: url(./ressources/graphics/icons/done.svg);
+    width: 3vh;
+    height: 3vh;
+}
+
+#launcher #MainContainer .container.show#FORGE-container .button .version-selector .dropper .version p {
+    margin-left: 2vh;
+    font-size: 3.5vh;
+    font-family: SquareFont;
 }
 
 
+/**/
 /**/

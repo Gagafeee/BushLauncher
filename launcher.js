@@ -11,12 +11,13 @@ const logginSaveManager = new DataManager({
 });
 const os = require('node:os');
 const ClientType = {
-    VANILLA: "vanilla",
-    FORGE: "forge"
+    VANILLA: "VANILLA",
+    FORGE: "FORGE"
 }
 const ClientVersion = {
     1192: "1.19.2",
-    1122: "1.12.2"
+    1122: "1.12.2",
+    189: "1.8.9"
 }
 const getAppDataPath = require('appdata-path');
 const shell = require('electron').shell;
@@ -95,7 +96,7 @@ function StartGame(clientType, version) {
 
 
             if (opts != undefined) {
-                console.log("Starting game in " + opts.version.number + " for: " + user.profile.name + " !");
+                console.log("Starting "+clientType+" game in " + opts.version.number + " for: " + user.profile.name + " !");
                 launcher.launch(opts);
             } else {
                 console.error("opts can't be set");

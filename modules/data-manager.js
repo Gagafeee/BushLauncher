@@ -39,4 +39,4 @@ function parseDataFile(filePath, defaults) {
 }
 
 // expose the class
-module.exports = {DataManager};
+module.exports = { DataManager };

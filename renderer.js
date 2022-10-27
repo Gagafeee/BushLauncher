@@ -5,16 +5,18 @@ setTimeout(() => {
     loadPanel.firstElementChild.classList.remove("pop");
 }, 1000);
 
+
 const { ipcRenderer } = require("electron");
 const loadPanel = document.querySelector("#loading-panel");
 const { Auth } = require('./authenticator');
+const auth = new Auth();
 const { DataManager } = require("./modules/data-manager.js");
 const logginSaveManager = new DataManager({
     configName: 'logged-users',
     defaults: {}
 });
 const { StartGame, ClientType, ClientVersion } = require("./launcher");
-const auth = new Auth();
+
 
 
 window.addEventListener("DOMContentLoaded", () => {
@@ -86,8 +88,8 @@ window.addEventListener("DOMContentLoaded", () => {
         console.log("detecting save, trying to login...");
         if (auth.isAccountValid(logginSaveManager.get("loggedUser"))) {
             //the accont is valid, we can use it to launch
-            auth.LogIn("internal", logginSaveManager.get("loggedUser"));
             console.log("Is valid: using: " + logginSaveManager.get("loggedUser").profile.name);
+            auth.LogIn("internal", logginSaveManager.get("loggedUser"));
             //hide login panel
             document.querySelector('#authPanel').style.display = 'none';
         } else {
@@ -95,18 +97,6 @@ window.addEventListener("DOMContentLoaded", () => {
         }
     } else {
         console.log("no user login save");
-    }
-    //
-    /*Lunch Button */
-    if (document.querySelector("#mc-btn") != null) {
-        document.querySelector('#mc-btn').addEventListener('click', () => {
-            StartGame(ClientType.VANILLA, ClientVersion[1192]);
-        })
-    }
-    if (document.querySelector("#mc-btn-forge") != null) {
-        document.querySelector('#mc-btn-forge').addEventListener('click', () => {
-            StartGame(ClientType.FORGE, ClientVersion[1192]);
-        })
     }
     //
     setTimeout(() => {

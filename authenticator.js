@@ -5,6 +5,7 @@ const logginSaveManager = new DataManager({
     defaults: {}
 });
 const { notificationsManager, NotificationsType } = require('./modules/notifications/notifications');
+
 class Auth {
     constructor() {}
     LogIn(provider, user) {
@@ -91,39 +92,16 @@ class Auth {
         resetInterface();
         notificationsManager.CreateNotification(NotificationsType.Done, "Logged out", 5000);
     }
-
-}
-const auth = new Auth();
-const accountPannel = document.querySelector("#account");
-const accountImage = accountPannel.querySelector("#userImage");
-const accountPseudo = accountPannel.querySelector(".username");
-
-function setInterfaceInfos(user) {
-    if (auth.isAccountValid(user)) {
-        console.log("setting interface info");
-        accountImage.src = "https://mc-heads.net/avatar/" + user.profile.name;
-        accountPseudo.innerText = user.profile.name;
-        //dropper
-        if (accountPannel.dataset.e == "false") {
-            accountPannel.addEventListener("click", () => {
-                if (accountPannel.dataset.open == "false") {
-                    accountPannel.dataset.open = "true";
-                } else {
-                    accountPannel.dataset.open = "false";
-                }
-            })
-            accountPannel.dataset.e = "true";
+    getData(user) {
+        if(this.isAccountValid(user)){
+            return user.data;
+        }else {
+            error("this account is not valid");
         }
-        //done
-        notificationsManager.CreateNotification(NotificationsType.Info, "Logged successful to: " + user.profile.name + ".", 7000)
-    } else {
-        console.error("Cannot set interface infos: account not valid");
     }
-}
 
-function resetInterface() {
-    accountImage.src = "https://mc-heads.net/avatar/notch";
-    accountPseudo.innerText = "undefined";
 }
-
 module.exports = { Auth }
+const { resetInterface, setInterfaceInfos, InitInterface } = require("./interface");
+
+
