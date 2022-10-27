@@ -54,4 +54,6 @@ out
 node_modules/electron/dist/electron.exe
 #local save
 logged-users.json
+dist
+bush-luncher-win32-x64
 # End of https://www.toptal.com/developers/gitignore/api/meteor,meteorjs,visualstudiocode

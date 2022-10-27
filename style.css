@@ -565,7 +565,6 @@ h6 {
     top: 40%;
     border-radius: 20px;
     display: flex;
-    transition: all 0.5s;
 }
 
 #launcher #MainContainer .container.show#VANILLA-container .button[data-open="true"] {

@@ -20,6 +20,7 @@ const ClientVersion = {
     189: "1.8.9"
 }
 const getAppDataPath = require('appdata-path');
+const ROOT = getAppDataPath() + "/.minecraft";
 const shell = require('electron').shell;
 const JavaVersion = 19;
 const { notificationsManager, NotificationsType } = require('./modules/notifications/notifications');
@@ -53,7 +54,7 @@ function StartGame(clientType, version) {
                         clientPackage: null,
                         // Pulled from the Minecraft Launcher core docs , this function is the star of the show
                         authorization: msmc.getMCLC().getAuth(user),
-                        root: "./minecraft",
+                        root: ROOT,
                         version: {
                             number: version,
                             type: "release"
@@ -76,7 +77,7 @@ function StartGame(clientType, version) {
                         clientPackage: null,
                         // Pulled from the Minecraft Launcher core docs , this function is the star of the show
                         authorization: msmc.getMCLC().getAuth(user),
-                        root: "./minecraft",
+                        root: ROOT,
                         version: {
                             number: version,
                             type: "release"
