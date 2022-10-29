@@ -15,19 +15,41 @@ const ClientType = {
     FORGE: "FORGE"
 }
 const ClientVersion = {
-    1192: "1.19.2",
-    1122: "1.12.2",
-    189: "1.8.9"
+    [ClientType.VANILLA]: {
+        1192: "1.19.2",
+        1122: "1.12.2",
+        189: "1.8.9"
+    },
+    [ClientType.FORGE]: {
+        1192: "1.19.2",
+        1122: "1.12.2"
+    }
+
 }
 const getAppDataPath = require('appdata-path');
-const ROOT = getAppDataPath() + "/.minecraft";
+const locationRoot = getAppDataPath() + "\\.minecraft";
 const shell = require('electron').shell;
 const JavaVersion = 19;
 const { notificationsManager, NotificationsType } = require('./modules/notifications/notifications');
+const localDataManager = new DataManager({
+    configName: 'localData',
+    default: {}
+});
+const { Downloader } = require('downloader');
+const downloader = new Downloader();
+const XMCLCore = require('@xmcl/core')
+const XMCLInstaller = require('@xmcl/installer');
+const { installForge, getForgeVersionList, ForgeVersionList, ForgeVersion, installDependencies, diagnoseInstall } = XMCLInstaller;
+console.log(XMCLInstaller);
+const { MinecraftFolder, ResolvedVersion, Version } = XMCLCore;
 
-function StartGame(clientType, version) {
+
+
+function StartGame(clientType, version, updateInterface) {
+    updateInterface({ text: "Loading..." });
     Object.freeze(ClientType);
     Object.freeze(ClientVersion);
+    updateInterface({ text: "Login In..." });
     if (!auth.isLogged()) {
         console.log("user is not logged !");
         auth.LogIn("Microsoft").then(() => {
@@ -36,6 +58,7 @@ function StartGame(clientType, version) {
     } else {
         console.log("user is logged");
     }
+    updateInterface({ text: "Validating Account..." });
     const user = auth.getLoggedAccount();
     if (!auth.isAccountValid(user)) {
         console.error("Cannot Start the game: logged account is not valid");
@@ -45,16 +68,17 @@ function StartGame(clientType, version) {
         if (msmc.errorCheck(user)) {
             return;
         }
+        updateInterface({ text: "Checking Java..." });
         //If the login works.
         CheckJava().then(() => {
             let opts = undefined;
+            updateInterface({ text: "Validating parameters..." });
             if (clientType == ClientType.VANILLA) {
-                if (Object.values(ClientVersion).includes(version)) {
+                if (Object.values(ClientVersion[ClientType.VANILLA]).includes(version)) {
                     opts = {
                         clientPackage: null,
-                        // Pulled from the Minecraft Launcher core docs , this function is the star of the show
                         authorization: msmc.getMCLC().getAuth(user),
-                        root: ROOT,
+                        root: locationRoot,
                         version: {
                             number: version,
                             type: "release"
@@ -67,17 +91,19 @@ function StartGame(clientType, version) {
                     }
                 } else {
                     console.error("wronk version");
+                    console.error(version);
                 }
 
 
             }
             if (clientType == ClientType.FORGE) {
-                if (Object.values(ClientVersion).includes(version)) {
+                if (Object.values(ClientVersion[ClientType.FORGE]).includes(version)) {
+
                     opts = {
                         clientPackage: null,
-                        // Pulled from the Minecraft Launcher core docs , this function is the star of the show
+                        // Pulled = require(the Minecraft Launcher core docs , this function is the star of the show
                         authorization: msmc.getMCLC().getAuth(user),
-                        root: ROOT,
+                        root: locationRoot,
                         version: {
                             number: version,
                             type: "release"
@@ -97,8 +123,16 @@ function StartGame(clientType, version) {
 
 
             if (opts != undefined) {
-                console.log("Starting "+clientType+" game in " + opts.version.number + " for: " + user.profile.name + " !");
-                launcher.launch(opts);
+                //install 
+                console.log(locationRoot);
+                updateInterface({ text: "Downloading Client..." });
+                DownloadClientType(clientType, version).then(() => {
+                    updateInterface({ text: "Starting..." });
+                    console.log("Starting " + clientType + " game in " + opts.version.number + " for: " + user.profile.name + " !");
+                    launcher.launch(opts);
+                    updateInterface({ text: "Launched..." });
+                })
+
             } else {
                 console.error("opts can't be set");
             }
@@ -106,8 +140,11 @@ function StartGame(clientType, version) {
 
             launcher.on('debug', (e) => console.log(e));
             launcher.on('data', (e) => console.log(e));
+            launcher.on('close', (e) => updateInterface({code: e}));
         }).catch(e => {
             console.warn("cancel launch: wronk java");
+            console.error(e);
+            notificationsManager.CreateNotification(NotificationsType.Error, "Please check your Java installation");
         })
 
     }
@@ -132,5 +169,68 @@ function CheckJava() {
         }
     })
 
+}
+
+function DownloadClientType(type, version) {
+    if (Object.keys(ClientType).includes(type) && Object.values(ClientVersion[type]).includes(version)) {
+
+        return new Promise(function(resolve, reject) {
+            if (type != ClientType.VANILLA) {
+                switch (type) {
+                    case ClientType.FORGE:
+                        console.log(version);
+                        getForgeVersionList({ mcversion: version }).then((ForgeVersionList) => {
+                            console.log(ForgeVersionList);
+                            const ResolvedVersion = ForgeVersionList.versions[0]
+                                //get if is already installed
+                            console.log(ResolvedVersion);
+
+                            const u = (locationRoot + "\\versions\\" + ResolvedVersion.mcversion + "-forge-" + ResolvedVersion.version);
+                            console.log(u);
+                            fs.stat(u, (err, stat) => {
+                                if (!err) {
+                                    console.log("already installed");
+                                    resolve();
+                                } else if (err.code === 'ENOENT') {
+                                    console.log("not installed");
+                                    console.log("installing forge " + version + "[" + ResolvedVersion.version + "]...");
+                                    installForge(ResolvedVersion, locationRoot).then((ResolvedForge) => {
+                                        console.log("All done");
+                                        resolve(ResolvedForge);
+
+
+                                    }).catch((err) => {
+                                        console.error(err);
+                                        reject(err);
+                                    })
+                                } else {
+                                    console.error("An error occurred: " + err);
+
+                                }
+                            })
+
+
+
+
+                        })
+
+
+
+
+                        break;
+
+                    default:
+                        break;
+                }
+            } else {
+                console.log("Vanilla don't installing");
+                resolve()
+            }
+        })
+
+
+    } else {
+        console.error("Client Type or version is not valid: " + type + " : " + version);
+    }
 }
 module.exports = { StartGame, ClientType, ClientVersion }

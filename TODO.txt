@@ -1,6 +1,23 @@
 #/ authenticator system
 # profiles system
-# interface
+#/ interface
 # forge manager
 # Java manager
 #/ save manager
+
+#Launch VANILLA {
+    20- check auth
+    40- check Java
+    60- check minecraft directory
+    80- install/check minecraft
+    100- launch
+}
+#Launche Forge {
+    - check auth
+    - check Java
+    - check minecraft directory
+    - install/check Forge
+    - install/check minecraft
+    - launch
+
+}

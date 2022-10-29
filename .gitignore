@@ -57,3 +57,4 @@ logged-users.json
 dist
 bush-luncher-win32-x64
 # End of https://www.toptal.com/developers/gitignore/api/meteor,meteorjs,visualstudiocode
+logged-users.json

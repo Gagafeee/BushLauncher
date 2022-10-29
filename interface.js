@@ -6,6 +6,10 @@ const logginSaveManager = new DataManager({
     configName: 'logged-users',
     defaults: {}
 });
+const localDataManager = new DataManager({
+    configName: 'localData',
+    default: {}
+});
 
 var inited = false;
 var selectedVersionType = null;
@@ -45,13 +49,13 @@ function InitInterface() {
             //launchbutton
         Array.from(containers).forEach((container) => {
             container.querySelector("#LaunchButton").querySelector("#Launch").addEventListener("click", () => {
-                StartGame(selectedVersionType, selectedVersion);
+                StartGame(selectedVersionType, selectedVersion, (Update) => UpdateLaunchingState(Update, container.querySelector("#LaunchButton").querySelector("#Launch")));
             })
-            container.querySelector("#LaunchButton").querySelector(".version-selector").addEventListener("click", ()=>{
+            container.querySelector("#LaunchButton").querySelector(".version-selector").addEventListener("click", () => {
                 const e = container.querySelector("#LaunchButton");
-                if(e.dataset.open == "false"){
+                if (e.dataset.open == "false") {
                     e.dataset.open = true;
-                }else {
+                } else {
                     e.dataset.open = false;
                 }
             })
@@ -60,6 +64,20 @@ function InitInterface() {
         inited = true;
     }
 
+
+}
+var textCount = 0;
+
+function UpdateLaunchingState(LaunchState, Button) {
+    if (LaunchState.code == 0) {
+        textCount = 0;
+        Button.querySelector("p").innerText = "Launch";
+    } else {
+        const y = textCount * (100 / 7)
+        console.log("[" + y + "%]: " + LaunchState.text);
+        Button.querySelector("p").innerText = LaunchState.text;
+        textCount++;
+    }
 
 }
 
@@ -106,7 +124,14 @@ function ChangeVersionType(newVersionType) {
         selectedVersionType = newVersionType;
         SaveInterface(auth.getLoggedAccount());
         //set button 
-        ChangeVersion(selectedVersion);
+        var v = null;
+        if (Object.values(ClientVersion[selectedVersionType]).includes(selectedVersion)) {
+            v = selectedVersion;
+        } else {
+            v = Object.values(ClientVersion[selectedVersionType])[0];
+            console.log("Version " + selectedVersion + " is not available in " + selectedVersionType + " environment: switching to " + v);
+        }
+        ChangeVersion(v);
     } else {
         console.error("cannot change version type: version is not supported");
         console.error(newVersionType);
@@ -114,7 +139,7 @@ function ChangeVersionType(newVersionType) {
 }
 
 function ChangeVersion(version) {
-    if (Object.values(ClientVersion).includes(version)) {
+    if (Object.values(ClientVersion[selectedVersionType]).includes(version)) {
         console.log('switching to version: ' + version);
         var container = null;
         Array.from(containers).forEach((c) => {
@@ -130,8 +155,8 @@ function ChangeVersion(version) {
         LaunchButtonSelectedVersionText.innerHTML = selectedVersion;
         //dropper
         LaunchButtonVersionContainer.innerHTML = "";
-        for (let i = 0; i < Object.keys(ClientVersion).length; i++) {
-            const version = Object.values(ClientVersion)[i];
+        for (let i = 0; i < Object.keys(ClientVersion[selectedVersionType]).length; i++) {
+            const version = Object.values(ClientVersion[selectedVersionType])[i];
             //contruct
             const newVersion = document.createElement("div");
             newVersion.className = "version";
@@ -139,7 +164,7 @@ function ChangeVersion(version) {
                 newVersion.classList.add("selected");
             }
             newVersion.addEventListener("click", () => {
-                    ChangeVersion(Object.values(ClientVersion)[i]);
+                    ChangeVersion(Object.values(ClientVersion[selectedVersionType])[i]);
                 })
                 //icon
             const img = document.createElement("div");
