@@ -1,7 +1,7 @@
 {
     "name": "bush-launcher",
     "productionName": "Bush Launcher",
-    "version": "0.3",
+    "version": "0.3.5",
     "description": "An Minecraft Version, Mods Manager",
     "main": "main.js",
     "author": "Gagafeee",

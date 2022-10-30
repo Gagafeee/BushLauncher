@@ -85,26 +85,51 @@
                 </div>
             </div>
             <div id="side-menu">
-                <div class="version-type selected" id="VANILLA">
+                <div class="version-type" id="VANILLA">
                     <div class="img" style="background-image: url('./ressources/graphics/images/grass_block.webp')"></div>
                     <p class="name">Vanilla</p>
                 </div>
-                <div class="version-type" id="FORGE">
+                <div class="version-type selected" id="FORGE">
                     <div class="img" style="background-image: url('./ressources/graphics/images/forge_logo.png')"></div>
                     <p class="name">Forge</p>
                 </div>
             </div>
             <div id="MainContainer">
-                <!--<div class="pure-button" id="mc-btn">Start Minecraft vanilla 1.19.2</div>
-        <div class="pure-button" id="mc-btn-forge">Start Minecraft Forge 1.12.2</div>
-        -->
-                <div class="content show" id="VANILLA-container">
+                <div class="container show" id="VANILLA-container">
                     <div class="img logo"></div>
-                    <div class="button" data-open="true">
+                    <div class="button" id="LaunchButton" data-open="false" data-launching="false">
+                        <div class="selectable">
+                            <div class="version-selector">
+                                <div class="content">
+                                    <div class="img"></div>
+                                    <p class="version">1.19.2</p>
+                                </div>
+                                <div class="dropper">
+                                    <div class="version selected">
+                                        <div class="img"></div>
+                                        <p>1.19.2</p>
+                                    </div>
+                                    <div class="version">
+                                        <div class="img"></div>
+                                        <p>1.12.2</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="v-line" style="height: 100%; background-color: var(--hover-green); width: 2px;"></div>
+                            <div class="launch">
+                                <p>Launch</p>
+                            </div>
+                        </div>
+                        <div class="loadBar" style="--loadpercentage: 0%;"></div>
+                    </div>
+                </div>
+                <div class="container" id="FORGE-container">
+                    <div class="img logo"></div>
+                    <div class="button" id="LaunchButton" data-open="false" data-launching="true">
                         <div class="version-selector">
                             <div class="content">
                                 <div class="img"></div>
-                                <p class="version">1.19.2</p>
+                                <p class="version">V</p>
                             </div>
                             <div class="dropper">
                                 <div class="version selected">
@@ -118,13 +143,10 @@
                             </div>
                         </div>
                         <div class="v-line" style="height: 100%; background-color: var(--hover-green); width: 2px;"></div>
-                        <div class="launch">
+                        <div class="launch" id="Launch">
                             <p>Launch</p>
                         </div>
                     </div>
-                </div>
-                <div class="content" id="FORGE-container">
-                    <p>Tose</p>
                 </div>
             </div>
         </div>

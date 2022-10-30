@@ -10,6 +10,7 @@ const localDataManager = new DataManager({
     configName: 'localData',
     default: {}
 });
+const prefix = "[Interface]: ";
 
 var inited = false;
 var selectedVersionType = null;
@@ -48,16 +49,23 @@ function InitInterface() {
             })
             //launchbutton
         Array.from(containers).forEach((container) => {
-            container.querySelector("#LaunchButton").querySelector("#Launch").addEventListener("click", () => {
-                StartGame(selectedVersionType, selectedVersion, (Update) => UpdateLaunchingState(Update, container.querySelector("#LaunchButton").querySelector("#Launch")));
+            container.querySelector("#LaunchButton").querySelector(".launch").addEventListener("click", () => {
+                const e = container.querySelector("#LaunchButton");
+                if (e.dataset.launching == "false") {
+                    container.querySelector("#LaunchButton").dataset.open = false;
+                    StartGame(selectedVersionType, selectedVersion, (Update) => UpdateLaunchingState(Update, container.querySelector("#LaunchButton")));
+                }
             })
             container.querySelector("#LaunchButton").querySelector(".version-selector").addEventListener("click", () => {
                 const e = container.querySelector("#LaunchButton");
-                if (e.dataset.open == "false") {
-                    e.dataset.open = true;
-                } else {
-                    e.dataset.open = false;
+                if (e.dataset.launching == "false") {
+                    if (e.dataset.open == "false") {
+                        e.dataset.open = true;
+                    } else {
+                        e.dataset.open = false;
+                    }
                 }
+
             })
         })
 
@@ -69,13 +77,22 @@ function InitInterface() {
 var textCount = 0;
 
 function UpdateLaunchingState(LaunchState, Button) {
+    const text = Button.querySelector(".launch").querySelector("p");
+    const bar = Button.querySelector(".loadBar");
     if (LaunchState.code == 0) {
         textCount = 0;
-        Button.querySelector("p").innerText = "Launch";
+        text.innerText = "Launch";
+        Button.dataset.launching = false;
+        bar.style.setProperty("--loadpercentage", 0 + "%");
     } else {
         const y = textCount * (100 / 7)
+        bar.style.setProperty("--loadpercentage", y + "%");
         console.log("[" + y + "%]: " + LaunchState.text);
-        Button.querySelector("p").innerText = LaunchState.text;
+        Button.dataset.launching = true;
+        text.innerText = LaunchState.text;
+        if (LaunchState.code == -1) {
+            Button.dataset.launching = "launched"
+        }
         textCount++;
     }
 
@@ -83,7 +100,7 @@ function UpdateLaunchingState(LaunchState, Button) {
 
 function setInterfaceInfos(user) {
     if (auth.isAccountValid(user)) {
-        console.log("setting interface info");
+        console.log(prefix + "setting interface info");
         accountImage.src = "https://mc-heads.net/avatar/" + user.profile.name;
         accountPseudo.innerText = user.profile.name;
         InitInterface();
@@ -102,7 +119,7 @@ function resetInterface() {
 
 function ChangeVersionType(newVersionType) {
     if (Object.keys(ClientType).includes(newVersionType)) {
-        console.log("switching to: " + newVersionType);
+        console.log(prefix + "switching to: " + newVersionType);
         //set buttons
         Array.from(versionTypeSelectorMenuButtons).forEach((c) => {
                 c.classList.remove("selected");
@@ -129,7 +146,7 @@ function ChangeVersionType(newVersionType) {
             v = selectedVersion;
         } else {
             v = Object.values(ClientVersion[selectedVersionType])[0];
-            console.log("Version " + selectedVersion + " is not available in " + selectedVersionType + " environment: switching to " + v);
+            console.log(prefix + "Version " + selectedVersion + " is not available in " + selectedVersionType + " environment: switching to " + v);
         }
         ChangeVersion(v);
     } else {
@@ -140,7 +157,7 @@ function ChangeVersionType(newVersionType) {
 
 function ChangeVersion(version) {
     if (Object.values(ClientVersion[selectedVersionType]).includes(version)) {
-        console.log('switching to version: ' + version);
+        console.log(prefix + 'switching to version: ' + version);
         var container = null;
         Array.from(containers).forEach((c) => {
             if (c.id == selectedVersionType + "-container") {
@@ -176,6 +193,8 @@ function ChangeVersion(version) {
             newVersion.appendChild(text);
             //add
             LaunchButtonVersionContainer.appendChild(newVersion);
+            //Save
+            SaveInterface(auth.getLoggedAccount());
         }
     } else {
         console.error("cannot change version: version is not supported");

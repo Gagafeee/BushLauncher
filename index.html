@@ -100,38 +100,33 @@
                 -->
                 <div class="container show" id="VANILLA-container">
                     <div class="img logo"></div>
-                    <div class="button" id="LaunchButton" data-open="false">
-                        <div class="version-selector">
-                            <div class="content">
-                                <div class="img"></div>
-                                <p class="version">V</p>
+                    <div class="button" id="LaunchButton" data-open="false" data-launching="false">
+                        <div class="selectable">
+                            <div class="version-selector">
+                                <div class="content">
+                                    <div class="img"></div>
+                                    <p class="version">V</p>
+                                </div>
+                                <div class="dropper">
+                                </div>
                             </div>
-                            <div class="dropper">
+                            <div class="v-line" style="height: 100%; background-color: var(--hover-green); width: 2px;"></div>
+                            <div class="launch">
+                                <p>Launch</p>
                             </div>
                         </div>
-                        <div class="v-line" style="height: 100%; background-color: var(--hover-green); width: 2px;"></div>
-                        <div class="launch" id="Launch">
-                            <p>Launch</p>
-                        </div>
+                        <div class="loadBar" style="--loadpercentage: 0%;"></div>
                     </div>
                 </div>
                 <div class="container" id="FORGE-container">
-                    <p>Tose</p>
-                    <div class="button" id="LaunchButton" data-open="false">
+                    <div class="img logo"></div>
+                    <div class="button" id="LaunchButton" data-open="false" data-launching="false">
                         <div class="version-selector">
                             <div class="content">
                                 <div class="img"></div>
                                 <p class="version">V</p>
                             </div>
                             <div class="dropper">
-                                <div class="version selected">
-                                    <div class="img"></div>
-                                    <p>1.19.2</p>
-                                </div>
-                                <div class="version">
-                                    <div class="img"></div>
-                                    <p>1.12.2</p>
-                                </div>
                             </div>
                         </div>
                         <div class="v-line" style="height: 100%; background-color: var(--hover-green); width: 2px;"></div>
@@ -154,9 +149,9 @@
     <script src="./renderer.js"></script>
     <script>
         /*Array.from(document.querySelector("#app").children).forEach((e) => {
-                                    e.style.opacity = null;
-                                })
-                                loadPanel.dataset.show = false;*/
+                                            e.style.opacity = null;
+                                        })
+                                        loadPanel.dataset.show = false;*/
     </script>
 </body>
 

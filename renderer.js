@@ -16,7 +16,7 @@ const logginSaveManager = new DataManager({
     defaults: {}
 });
 const { StartGame, ClientType, ClientVersion } = require("./launcher");
-
+const prefix = "[Loader]: ";
 
 
 window.addEventListener("DOMContentLoaded", () => {
@@ -70,7 +70,7 @@ window.addEventListener("DOMContentLoaded", () => {
                         e.firstElementChild.style.backgroundImage = null;
                     })
                     .catch((error) => {
-                        console.error("cannot Login: " + error);
+                        console.error(prefix + "cannot Login: " + error);
                         e.firstElementChild.style.backgroundImage = null;
                     })
             })
@@ -85,18 +85,18 @@ window.addEventListener("DOMContentLoaded", () => {
         })
         /*reauth user (if is posible) */
     if (auth.isLogged()) {
-        console.log("detecting save, trying to login...");
+        console.log(prefix + "detecting save, trying to login...");
         if (auth.isAccountValid(logginSaveManager.get("loggedUser"))) {
             //the accont is valid, we can use it to launch
-            console.log("Is valid: using: " + logginSaveManager.get("loggedUser").profile.name);
+            console.log(prefix + "Is valid: using: " + logginSaveManager.get("loggedUser").profile.name);
             auth.LogIn("internal", logginSaveManager.get("loggedUser"));
             //hide login panel
             document.querySelector('#authPanel').style.display = 'none';
         } else {
-            console.warn("save is no valid");
+            console.warn(prefix + "save is no valid");
         }
     } else {
-        console.log("no user login save");
+        console.log(prefix + "no user login save");
     }
     //
     setTimeout(() => {

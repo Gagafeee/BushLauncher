@@ -5,6 +5,7 @@ const logginSaveManager = new DataManager({
     defaults: {}
 });
 const { notificationsManager, NotificationsType } = require('./modules/notifications/notifications');
+const prefix = "[Authenticator]: ";
 
 class Auth {
     constructor() {}
@@ -17,7 +18,7 @@ class Auth {
                             .then(result => {
                                 //If the login works
                                 if (errorCheck(result)) {
-                                    console.log("We failed to log someone in because : " + result.reason)
+                                    console.log(prefix + "We failed to log someone in because : " + result.reason)
                                     return;
                                 }
                                 logginSaveManager.set("loggedUser", result);
@@ -26,7 +27,7 @@ class Auth {
                             })
                             .catch(reason => {
                                 //If the login fails
-                                console.error("We failed to log someone in because : " + reason);
+                                console.error(prefix + "We failed to log someone in because : " + reason);
                                 reject(reason);
                             })
                         break;
@@ -36,14 +37,14 @@ class Auth {
                                 //logged
                                 //If the login works
                                 if (errorCheck(user)) {
-                                    console.log("We failed to log someone in because : " + result.reason)
+                                    console.log(prefix + "We failed to log someone in because : " + result.reason)
                                     return;
                                 }
                                 logginSaveManager.set("loggedUser", user);
                                 setInterfaceInfos(user);
                                 resolve(user);
                             } else {
-                                console.error("user not valid");
+                                console.error(prefix + "user not valid");
                                 reject();
                             }
                         } else {
@@ -52,7 +53,7 @@ class Auth {
                         }
                         break;
                     default:
-                        console.error("ProviderMethod needed !");
+                        console.error(prefix + "ProviderMethod needed !");
                         reject();
                         break;
                 }
@@ -66,7 +67,7 @@ class Auth {
         if (user != null) {
             return (validate(user.profile));
         } else {
-            console.error("user to verifie is null");
+            console.error(prefix + "user to verifie is null");
         }
 
     }
@@ -83,7 +84,7 @@ class Auth {
         if (this.isLogged()) {
             return logginSaveManager.get("loggedUser");
         } else {
-            console.error("no one is logged");
+            console.error(prefix + "no one is logged");
         }
     }
     logOut() {
@@ -93,9 +94,9 @@ class Auth {
         notificationsManager.CreateNotification(NotificationsType.Done, "Logged out", 5000);
     }
     getData(user) {
-        if(this.isAccountValid(user)){
+        if (this.isAccountValid(user)) {
             return user.data;
-        }else {
+        } else {
             error("this account is not valid");
         }
     }
@@ -103,5 +104,3 @@ class Auth {
 }
 module.exports = { Auth }
 const { resetInterface, setInterfaceInfos, InitInterface } = require("./interface");
-
-
