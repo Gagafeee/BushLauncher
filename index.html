@@ -95,11 +95,84 @@
                 </div>
             </div>
             <div id="MainContainer">
-                <!--<div class="pure-button" id="mc-btn">Start Minecraft vanilla 1.19.2</div>
-                <div class="pure-button" id="mc-btn-forge">Start Minecraft Forge 1.12.2</div>
-                -->
                 <div class="container show" id="VANILLA-container">
                     <div class="img logo"></div>
+                    <div id="server-list">
+                        <div class="title">
+                            <p>Your servers: </p>
+                        </div>
+                        <div class="list" data-loading="true">
+                            <div class="loader">
+                                <div class="img"></div>
+                            </div>
+                            <div class="servers">
+                                <div class="server">
+                                    <div class="button">
+                                        <div class="img"></div>
+                                        <p>Join</p>
+                                    </div>
+                                    <div class="content">
+                                        <img class="logo img"></img>
+                                        <div class="infos">
+                                            <div>
+                                                <p class="name">Name</p>
+                                                <p class="ip">mc.hypixel.net</p>
+                                            </div>
+                                            <p class="version">1.xx.x</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="server">
+                                    <div class="button">
+                                        <div class="img"></div>
+                                        <p>Join</p>
+                                    </div>
+                                    <div class="content">
+                                        <img class="logo img"></img>
+                                        <div class="infos">
+                                            <div>
+                                                <p class="name">Name</p>
+                                                <p class="ip">mc.hypixel.net</p>
+                                            </div>
+                                            <p class="version">1.xx.x</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="server">
+                                    <div class="button">
+                                        <div class="img"></div>
+                                        <p>Join</p>
+                                    </div>
+                                    <div class="content">
+                                        <img class="logo img"></img>
+                                        <div class="infos">
+                                            <div>
+                                                <p class="name">Name</p>
+                                                <p class="ip">mc.hypixel.net</p>
+                                            </div>
+                                            <p class="version">1.xx.x</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="server unavailable">
+                                    <div class="button">
+                                        <div class="img"></div>
+                                        <p>Join</p>
+                                    </div>
+                                    <div class="content">
+                                        <img class="logo img"></img>
+                                        <div class="infos">
+                                            <div>
+                                                <p class="name">Name</p>
+                                                <p class="ip">un serveur trop bien</p>
+                                            </div>
+                                            <p class="version">1.xx.x</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     <div class="button" id="LaunchButton" data-open="false" data-launching="false">
                         <div class="selectable">
                             <div class="version-selector">
@@ -117,6 +190,7 @@
                         </div>
                         <div class="loadBar" style="--loadpercentage: 0%;"></div>
                     </div>
+
                 </div>
                 <div class="container" id="FORGE-container">
                     <div class="img logo"></div>
@@ -149,9 +223,9 @@
     <script src="./renderer.js"></script>
     <script>
         /*Array.from(document.querySelector("#app").children).forEach((e) => {
-                                            e.style.opacity = null;
-                                        })
-                                        loadPanel.dataset.show = false;*/
+                                                            e.style.opacity = null;
+                                                        })
+                                                        loadPanel.dataset.show = false;*/
     </script>
 </body>
 

@@ -1,6 +1,6 @@
 const { Auth } = require('./authenticator');
 const auth = new Auth();
-const { ClientType, ClientVersion, StartGame } = require('./launcher');
+const { ClientType, ClientVersion, StartGame, getVanillaVersionList, locationRoot } = require('./launcher');
 const { DataManager } = require("./modules/data-manager.js");
 const logginSaveManager = new DataManager({
     configName: 'logged-users',
@@ -10,6 +10,8 @@ const localDataManager = new DataManager({
     configName: 'localData',
     default: {}
 });
+const { getServerList, refreshServerList } = require('./servers');
+const fs = require('fs');
 const prefix = "[Interface]: ";
 
 var inited = false;
@@ -92,6 +94,8 @@ function UpdateLaunchingState(LaunchState, Button) {
         text.innerText = LaunchState.text;
         if (LaunchState.code == -1) {
             Button.dataset.launching = "launched"
+        } else if (LaunchState.code != -1 && LaunchState.code != 0) {
+            console.warn(LaunchState.code);
         }
         textCount++;
     }
@@ -105,6 +109,8 @@ function setInterfaceInfos(user) {
         accountPseudo.innerText = user.profile.name;
         InitInterface();
         ChangeVersionType(selectedVersionType);
+
+
         //done
         notificationsManager.CreateNotification(NotificationsType.Info, "Logged successful to: " + user.profile.name + ".", 7000)
     } else {
@@ -149,6 +155,9 @@ function ChangeVersionType(newVersionType) {
             console.log(prefix + "Version " + selectedVersion + " is not available in " + selectedVersionType + " environment: switching to " + v);
         }
         ChangeVersion(v);
+        getServerList().then((LocalServerList) => {
+            refreshServerList(LocalServerList, selectedVersion);
+        })
     } else {
         console.error("cannot change version type: version is not supported");
         console.error(newVersionType);
@@ -172,30 +181,36 @@ function ChangeVersion(version) {
         LaunchButtonSelectedVersionText.innerHTML = selectedVersion;
         //dropper
         LaunchButtonVersionContainer.innerHTML = "";
-        for (let i = 0; i < Object.keys(ClientVersion[selectedVersionType]).length; i++) {
-            const version = Object.values(ClientVersion[selectedVersionType])[i];
-            //contruct
-            const newVersion = document.createElement("div");
-            newVersion.className = "version";
-            if (version == selectedVersion) {
-                newVersion.classList.add("selected");
+        GetInstalledVersion(selectedVersionType).then((statList) => {
+            for (let i = 0; i < Object.keys(ClientVersion[selectedVersionType]).length; i++) {
+                const version = Object.values(ClientVersion[selectedVersionType])[i];
+                const stat = statList.find((stat) => {
+                    return stat.v == version;
+                });
+                //contruct
+                const newVersion = document.createElement("div");
+                newVersion.className = "version";
+                if (version == selectedVersion) {
+                    newVersion.classList.add("selected");
+                }
+                newVersion.addEventListener("click", () => {
+                        ChangeVersion(Object.values(ClientVersion[selectedVersionType])[i]);
+                    })
+                    //icon
+                const img = document.createElement("div");
+                img.className = "img" + (stat.installed ? " installed" : " toDownload");
+                newVersion.appendChild(img);
+                //text
+                const text = document.createElement("p");
+                text.innerHTML = version;
+                newVersion.appendChild(text);
+                //add
+                LaunchButtonVersionContainer.appendChild(newVersion);
+                //Save
+                SaveInterface(auth.getLoggedAccount());
             }
-            newVersion.addEventListener("click", () => {
-                    ChangeVersion(Object.values(ClientVersion[selectedVersionType])[i]);
-                })
-                //icon
-            const img = document.createElement("div");
-            img.className = "img";
-            newVersion.appendChild(img);
-            //text
-            const text = document.createElement("p");
-            text.innerHTML = version;
-            newVersion.appendChild(text);
-            //add
-            LaunchButtonVersionContainer.appendChild(newVersion);
-            //Save
-            SaveInterface(auth.getLoggedAccount());
-        }
+        })
+
     } else {
         console.error("cannot change version: version is not supported");
         console.error(version);
@@ -213,6 +228,39 @@ function SaveInterface(user) {
         selectedVersion: selectedVersion
     };
     logginSaveManager.set("loggedUser", u)
+
+}
+
+
+function GetInstalledVersion(clientType) {
+    return new Promise((resolve, reject) => {
+        var VersionList = [];
+        switch (clientType) {
+            case ClientType.VANILLA:
+                getVanillaVersionList().then((versionList) => {
+                    const u = (locationRoot + "\\versions\\");
+                    const folderList = fs.readdirSync(u);
+                    for (let i = 0; i < versionList.length; i++) {
+                        const e = versionList[i];
+                        if (folderList.includes(e.id)) {
+                            VersionList.push({ installed: true, v: e.id, version: e });
+
+                        } else {
+                            VersionList.push({ installed: false, v: e.id, version: e });
+                        }
+
+
+                    }
+                    resolve(VersionList);
+
+                })
+                break;
+
+            default:
+                break;
+        }
+
+    })
 
 }
 module.exports = { resetInterface, setInterfaceInfos, InitInterface }

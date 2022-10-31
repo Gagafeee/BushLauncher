@@ -17,8 +17,15 @@ const ClientType = {
 const ClientVersion = {
     [ClientType.VANILLA]: {
         1192: "1.19.2",
+        1182: "1.18.2",
+        1165: "1.16.5",
+        1144: "1.14.4",
+        1132: "1.13.2",
         1122: "1.12.2",
-        189: "1.8.9"
+        189: "1.8.9",
+        171: "1.7.10"
+
+
     },
     [ClientType.FORGE]: {
         1192: "1.19.2",
@@ -153,7 +160,7 @@ function StartGame(clientType, version, updateInterface) {
 
         }
     } else {
-        console.warn(prefix+ "can't start, game is already running");
+        console.warn(prefix + "can't start, game is already running");
         notificationsManager.CreateNotification(NotificationsType.Info, "Game is already running !", 5000);
     }
 }
@@ -292,4 +299,4 @@ function getVanillaVersionList() {
     })
 }
 
-module.exports = { StartGame, ClientType, ClientVersion }
+module.exports = { locationRoot, StartGame, ClientType, ClientVersion, getVanillaVersionList }

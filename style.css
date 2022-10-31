@@ -66,6 +66,18 @@ h6 {
     margin: 0;
 }
 
+
+/*scrollbar*/
+
+div::-webkit-scrollbar {
+    width: 8px;
+}
+
+div::-webkit-scrollbar-thumb {
+    background: var(--hover-color);
+    border-radius: 8px;
+}
+
 #app {
     width: 100vw;
     height: calc(100vh - 30px);
@@ -545,7 +557,7 @@ h6 {
 
 /*Button*/
 
-#launcher #MainContainer .container.show .button {
+#launcher #MainContainer .container.show #LaunchButton {
     width: 30vw;
     height: 10vh;
     background-color: var(--main-green);
@@ -555,24 +567,25 @@ h6 {
     transition: all 0.5s;
 }
 
-#launcher #MainContainer .container.show .button .selectable {
+#launcher #MainContainer .container.show #LaunchButton .selectable {
     width: 100%;
     height: 100%;
     display: flex;
 }
-#launcher #MainContainer .container.show .button[data-launching="true"] .selectable {
+
+#launcher #MainContainer .container.show #LaunchButton[data-launching="true"] .selectable {
     height: 93%;
 }
 
-#launcher #MainContainer .container.show .button[data-launching="true"] {
+#launcher #MainContainer .container.show #LaunchButton[data-launching="true"] {
     width: 35vw;
 }
 
-#launcher #MainContainer .container.show .button[data-open="true"] {
+#launcher #MainContainer .container.show #LaunchButton[data-open="true"] {
     border-radius: 20px 20px 20px 0;
 }
 
-#launcher #MainContainer .container.show .button .selectable .launch {
+#launcher #MainContainer .container.show #LaunchButton .selectable .launch {
     height: 100%;
     width: 45%;
     display: flex;
@@ -584,34 +597,34 @@ h6 {
     transition: all 0.5s;
 }
 
-#launcher #MainContainer .container.show .button[data-launching="false"] .selectable .launch:hover {
+#launcher #MainContainer .container.show #LaunchButton[data-launching="false"] .selectable .launch:hover {
     width: 70%;
     background-color: var(--hover-green);
 }
 
-#launcher #MainContainer .container.show .button[data-launching="true"] .selectable .launch {
+#launcher #MainContainer .container.show #LaunchButton[data-launching="true"] .selectable .launch {
     width: 90%;
 }
 
-#launcher #MainContainer .container.show .button .selectable .launch p {
+#launcher #MainContainer .container.show #LaunchButton .selectable .launch p {
     transition: all 0.3s;
 }
 
-#launcher #MainContainer .container.show .button[data-launching="false"] .selectable .launch:hover p {
+#launcher #MainContainer .container.show #LaunchButton[data-launching="false"] .selectable .launch:hover p {
     transform: scale(1.1);
 }
 
-#launcher #MainContainer .container.show .button[data-launching="true"] .selectable .launch p {
+#launcher #MainContainer .container.show #LaunchButton[data-launching="true"] .selectable .launch p {
     font-size: 3vh;
 }
 
-#launcher #MainContainer .container.show .button .selectable .version-selector {
+#launcher #MainContainer .container.show #LaunchButton .selectable .version-selector {
     height: 100%;
     width: 55%;
     border-radius: 20px 0 0 20px;
 }
 
-#launcher #MainContainer .container.show .button .selectable .version-selector .content {
+#launcher #MainContainer .container.show #LaunchButton .selectable .version-selector .content {
     width: 100%;
     height: 100%;
     display: flex;
@@ -619,84 +632,96 @@ h6 {
     justify-content: space-around;
 }
 
-#launcher #MainContainer .container.show .button .selectable .version-selector .content .img {
+#launcher #MainContainer .container.show #LaunchButton .selectable .version-selector .content .img {
     background-image: url(./ressources/graphics/icons/arrow_down.svg);
     width: 3.5vh;
     height: 3.5vh;
     transition: all 0.3s;
 }
 
-#launcher #MainContainer .container.show .button[data-open="true"] .selectable .version-selector .content .img,
-#launcher #MainContainer .container.show .button[data-launching="false"] .selectable .version-selector:hover .content .img {
+#launcher #MainContainer .container.show #LaunchButton[data-open="true"] .selectable .version-selector .content .img,
+#launcher #MainContainer .container.show #LaunchButton[data-launching="false"] .selectable .version-selector:hover .content .img {
     transform: translateY(2px);
 }
 
-#launcher #MainContainer .container.show .button[data-launching="true"] .selectable .version-selector .content .img {
+#launcher #MainContainer .container.show #LaunchButton[data-launching="true"] .selectable .version-selector .content .img {
     background-image: url(./ressources/graphics/icons/loading.svg);
 }
 
-#launcher #MainContainer .container.show .button[data-launching="launched"] .selectable .version-selector .content .img {
+#launcher #MainContainer .container.show #LaunchButton[data-launching="launched"] .selectable .version-selector .content .img {
     background-image: url(./ressources/graphics/icons/done.svg);
 }
 
-#launcher #MainContainer .container.show .button .selectable .version-selector .content .version {
+#launcher #MainContainer .container.show #LaunchButton .selectable .version-selector .content .version {
     font-size: 4vh;
     font-family: SquareFont;
     margin-right: 2vh;
 }
 
-#launcher #MainContainer .container.show .button[data-open="false"] .selectable .version-selector .dropper,
-#launcher #MainContainer .container.show .button[data-launching="true"] .selectable .version-selector .dropper {
+#launcher #MainContainer .container.show #LaunchButton[data-open="false"] .selectable .version-selector .dropper,
+#launcher #MainContainer .container.show #LaunchButton[data-launching="true"] .selectable .version-selector .dropper {
     display: none;
 }
 
-#launcher #MainContainer .container.show .button[data-open="true"][data-launching="false"] .selectable .version-selector .dropper {
+#launcher #MainContainer .container.show #LaunchButton[data-open="true"][data-launching="false"] .selectable .version-selector .dropper {
     width: 100%;
     min-height: 100%;
+    max-height: 300%;
     background-color: var(--background-color);
     padding-bottom: 1vh;
-    overflow-y: scroll;
-    border-radius: 0 0 20px 20px
+    overflow-y: auto;
+    border-radius: 0 0 20px 20px;
+    display: flex;
+    flex-direction: column-reverse;
 }
 
-#launcher #MainContainer .container.show .button .selectable .version-selector .dropper .version {
+#launcher #MainContainer .container.show #LaunchButton .selectable .version-selector .dropper .version {
     width: 100%;
     height: 7vh;
+    flex: none;
     display: flex;
     align-items: center;
     justify-content: space-around;
     transition: all 0.3s;
 }
 
-#launcher #MainContainer .container.show .button .selectable .version-selector .dropper .version.selected {
+#launcher #MainContainer .container.show #LaunchButton .selectable .version-selector .dropper .version.selected {
     background-color: var(--hover-green);
 }
 
-#launcher #MainContainer .container.show .button .selectable .version-selector .dropper .version.selected:hover {
+#launcher #MainContainer .container.show #LaunchButton .selectable .version-selector .dropper .version.selected:hover {
     background-color: var(--hover-green);
 }
 
-#launcher #MainContainer .container.show .button .selectable .version-selector .dropper .version:hover {
+#launcher #MainContainer .container.show #LaunchButton .selectable .version-selector .dropper .version:hover {
     background-color: var(--hover-color);
 }
 
-#launcher #MainContainer .container.show .button .selectable .version-selector .dropper .version .img {
-    background-image: url(./ressources/graphics/icons/done.svg);
+#launcher #MainContainer .container.show #LaunchButton .selectable .version-selector .dropper .version .img {
+    background-image: url(./ressources/graphics/icons/close.svg);
     width: 3vh;
     height: 3vh;
 }
 
-#launcher #MainContainer .container.show .button .selectable .version-selector .dropper .version p {
+#launcher #MainContainer .container.show #LaunchButton .selectable .version-selector .dropper .version .img.installed {
+    background-image: url(./ressources/graphics/icons/done.svg);
+}
+
+#launcher #MainContainer .container.show #LaunchButton .selectable .version-selector .dropper .version .img.toDownload {
+    background-image: url(./ressources/graphics/icons/download.svg);
+}
+
+#launcher #MainContainer .container.show #LaunchButton .selectable .version-selector .dropper .version p {
     margin-left: 2vh;
     font-size: 3.5vh;
     font-family: SquareFont;
 }
 
-#launcher #MainContainer .container.show .button[data-launching="false"] .loadBar {
+#launcher #MainContainer .container.show #LaunchButton[data-launching="false"] .loadBar {
     display: none;
 }
 
-#launcher #MainContainer .container.show .button[data-launching="true"] .loadBar {
+#launcher #MainContainer .container.show #LaunchButton[data-launching="true"] .loadBar {
     display: block;
     width: var(--loadpercentage);
     height: 7%;
@@ -725,6 +750,152 @@ h6 {
     background-image: url(./ressources/graphics/images/minecraft_java_logo.svg);
     /*background-color: orange;*/
     margin-top: 10vh;
+}
+
+#launcher #MainContainer .container.show#VANILLA-container #server-list {
+    width: 45vw;
+    height: 40vh;
+    background-color: var(--dark-black);
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    border-radius: 20px 0 0 0;
+}
+
+#launcher #MainContainer .container.show#VANILLA-container #server-list .title {
+    width: 100%;
+    height: 10%;
+    text-align: center;
+    font-family: SquareFont;
+    font-size: 3vh;
+    margin-top: 1vh;
+}
+
+#launcher #MainContainer .container.show#VANILLA-container #server-list .list {
+    /*background-color: red;*/
+    width: 100%;
+    height: 90%;
+    overflow-y: auto;
+}
+
+#launcher #MainContainer .container.show#VANILLA-container #server-list .list[data-loading="false"] .loader {
+    display: none;
+}
+
+#launcher #MainContainer .container.show#VANILLA-container #server-list .list[data-loading="true"] .loader {
+    width: 100%;
+    height: 90%;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    /*background-color: blue;*/
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#launcher #MainContainer .container.show#VANILLA-container #server-list .list .loader .img {
+    width: 10vh;
+    height: 10vh;
+    background-image: url(./ressources/graphics/icons/loading.svg);
+    /*background-color: red;*/
+}
+
+#launcher #MainContainer .container.show#VANILLA-container #server-list .list .servers {
+    width: 100%;
+    height: 100%;
+    /*background-color: green;*/
+}
+
+#launcher #MainContainer .container.show#VANILLA-container #server-list .list .servers .server {
+    width: 97%;
+    height: 10vh;
+    transform: translateX(-50%);
+    background-color: var(--black);
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    transition: all 0.5s;
+    border-radius: 10px;
+    overflow: hidden;
+    margin: 1vh 0 1vh 50%;
+}
+
+#launcher #MainContainer .container.show#VANILLA-container #server-list .list .servers .server.unavailable {
+    opacity: 0.4;
+}
+#launcher #MainContainer .container.show#VANILLA-container #server-list .list .servers .server.unavailable .button {
+    border: 0;
+}
+
+#launcher #MainContainer .container.show#VANILLA-container #server-list .list .servers .server.unavailable .button .img {
+    background-image: url(./ressources/graphics/icons/close.svg);
+
+}
+
+#launcher #MainContainer .container.show#VANILLA-container #server-list .list .servers .server .button {
+    height: 80%;
+    width: 8vh;
+    /*background-color: red;*/
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.5s;
+    border: 1px solid #fff;
+    border-radius: 15px;
+}
+
+#launcher #MainContainer .container.show#VANILLA-container #server-list .list .servers .server:not(.unavailable) .button:hover {
+    width: 30%;
+    border-radius: 10px;
+}
+
+#launcher #MainContainer .container.show#VANILLA-container #server-list .list .servers .server .button p {
+    display: none;
+}
+
+#launcher #MainContainer .container.show#VANILLA-container #server-list .list .servers .server:not(.unavailable) .button:hover p {
+    display: block;
+    font-family: SquareFont;
+    font-size: 3.5vh;
+}
+
+#launcher #MainContainer .container.show#VANILLA-container #server-list .list .servers .server .button .img {
+    background-image: url(./ressources/graphics/icons/caret-right.svg);
+    width: 6vh;
+    height: 6vh;
+}
+
+#launcher #MainContainer .container.show#VANILLA-container #server-list .list .servers .server .content {
+    height: 100%;
+    width: 80%;
+    /*background-color: blue;*/
+    display: flex;
+    align-items: center;
+    transition: all 0.5s;
+}
+
+#launcher #MainContainer .container.show#VANILLA-container #server-list .list .servers .server .content .logo {
+    height: 10vh;
+    width: 10vh;
+    /*background-color: orange;*/
+    margin: 0;
+    background-image: url(./ressources/graphics/images/default-server-icon.webp);
+    border-radius: 10px;
+}
+
+#launcher #MainContainer .container.show#VANILLA-container #server-list .list .servers .server .content .infos {
+    height: 100%;
+    width: 80%;
+    /*background-color: orangered;*/
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    font-size: 3vh;
+    font-family: SquareFont;
+}
+#launcher #MainContainer .container.show#VANILLA-container #server-list .list .servers .server .content .infos .ip {
+    font-size: 2vh;
 }
 
 
