@@ -1,5 +1,3 @@
-const { Auth } = require('./authenticator');
-const auth = new Auth();
 const { ClientType, ClientVersion, StartGame, getVanillaVersionList, locationRoot } = require('./launcher');
 const { DataManager } = require("./modules/data-manager.js");
 const logginSaveManager = new DataManager({
@@ -12,9 +10,11 @@ const localDataManager = new DataManager({
 });
 const { getServerList, refreshServerList } = require('./servers');
 const fs = require('fs');
+const { setWindowProgressbar } = require("./renderer");
+const authenticator = require("./authenticator");
 const prefix = "[Interface]: ";
 
-var inited = false;
+var initialized = false;
 var selectedVersionType = null;
 var selectedVersion = null;
 const versionTypeSelectorMenu = document.querySelector("#side-menu")
@@ -28,9 +28,9 @@ const accountPseudo = accountPannel.querySelector(".username");
 
 
 function InitInterface() {
-    if (!inited) {
+    if (!initialized) {
         /*Account */
-
+        console.log("init interface");
         //dropper
         accountPannel.addEventListener("click", () => {
             if (accountPannel.dataset.open == "false") {
@@ -40,7 +40,7 @@ function InitInterface() {
             }
         });
         /*SideMenu*/
-        const data = auth.getData(auth.getLoggedAccount());
+        const data = authenticator.getData(authenticator.getLoggedAccount());
         selectedVersionType = (data != undefined ? (data.selectedVersionType != undefined ? data.selectedVersionType : ClientType.VANILLA) : ClientType.VANILLA)
         selectedVersion = (data != undefined ? (data.selectedVersion != undefined ? data.selectedVersion : ClientVersion[1192]) : ClientVersion[1192])
 
@@ -71,7 +71,7 @@ function InitInterface() {
             })
         })
 
-        inited = true;
+        initialized = true;
     }
 
 
@@ -81,36 +81,50 @@ var textCount = 0;
 function UpdateLaunchingState(LaunchState, Button) {
     const text = Button.querySelector(".launch").querySelector("p");
     const bar = Button.querySelector(".loadBar");
-    if (LaunchState.code == 0) {
-        textCount = 0;
-        text.innerText = "Launch";
-        Button.dataset.launching = false;
-        bar.style.setProperty("--loadpercentage", 0 + "%");
-    } else {
-        const y = textCount * (100 / 7)
-        bar.style.setProperty("--loadpercentage", y + "%");
-        console.log("[" + y + "%]: " + LaunchState.text);
-        Button.dataset.launching = true;
-        text.innerText = LaunchState.text;
-        if (LaunchState.code == -1) {
-            Button.dataset.launching = "launched"
-        } else if (LaunchState.code != -1 && LaunchState.code != 0) {
+    switch (LaunchState.code) {
+        case "starting":
+            const y = textCount * (100 / 7)
+            bar.style.setProperty("--loadpercentage", y + "%");
+            setWindowProgressbar(y);
+            console.log("[" + y + "%]: " + LaunchState.text);
+            Button.dataset.launching = true;
+            text.innerText = LaunchState.text;
+            break;
+        case "running":
+            Button.dataset.launching = "launched";
+            text.innerText = LaunchState.text;
+            setWindowProgressbar(0, "none");
+            break;
+        case "closed":
+            textCount = 0;
+            text.innerText = "Launch";
+            Button.dataset.launching = false;
+            bar.style.setProperty("--loadpercentage", 0 + "%");
+            setWindowProgressbar(0);
+            if (LaunchState.returnCode && LaunchState.returnCode != "closed") {
+                console.warn(LaunchState.code);
+                setWindowProgressbar(1, "error");
+                notificationsManager.CreateNotification(NotificationsType.Error, "An error occurred: " + LaunchState.code)
+            }
+            break;
+        case "error":
             console.warn(LaunchState.code);
-        }
-        textCount++;
+            setWindowProgressbar(1, "error");
+            notificationsManager.CreateNotification(NotificationsType.Error, "An error occurred: " + LaunchState.code)
+            break;
     }
+    textCount++;
 
 }
 
 function setInterfaceInfos(user) {
-    if (auth.isAccountValid(user)) {
+    if (!initialized) InitInterface()
+    if (authenticator.isAccountValid(user)) {
         console.log(prefix + "setting interface info");
         accountImage.src = "https://mc-heads.net/avatar/" + user.profile.name;
         accountPseudo.innerText = user.profile.name;
         InitInterface();
         ChangeVersionType(selectedVersionType);
-
-
         //done
         notificationsManager.CreateNotification(NotificationsType.Info, "Logged successful to: " + user.profile.name + ".", 7000)
     } else {
@@ -119,11 +133,13 @@ function setInterfaceInfos(user) {
 }
 
 function resetInterface() {
+    if (!initialized) InitInterface()
     accountImage.src = "https://mc-heads.net/avatar/notch";
     accountPseudo.innerText = "undefined";
 }
 
 function ChangeVersionType(newVersionType) {
+    if (!initialized) InitInterface()
     if (Object.keys(ClientType).includes(newVersionType)) {
         console.log(prefix + "switching to: " + newVersionType);
         //set buttons
@@ -145,7 +161,7 @@ function ChangeVersionType(newVersionType) {
 
         //save interface
         selectedVersionType = newVersionType;
-        SaveInterface(auth.getLoggedAccount());
+        SaveInterface(authenticator.getLoggedAccount());
         //set button 
         var v = null;
         if (Object.values(ClientVersion[selectedVersionType]).includes(selectedVersion)) {
@@ -155,9 +171,9 @@ function ChangeVersionType(newVersionType) {
             console.log(prefix + "Version " + selectedVersion + " is not available in " + selectedVersionType + " environment: switching to " + v);
         }
         ChangeVersion(v);
-        getServerList().then((LocalServerList) => {
-            refreshServerList(LocalServerList, selectedVersion);
-        })
+        /*getServerList().then((LocalServerList) => {
+            refreshServerList(LocalServerList);
+        })*/
     } else {
         console.error("cannot change version type: version is not supported");
         console.error(newVersionType);
@@ -165,6 +181,7 @@ function ChangeVersionType(newVersionType) {
 }
 
 function ChangeVersion(version) {
+    if (!initialized) InitInterface()
     if (Object.values(ClientVersion[selectedVersionType]).includes(version)) {
         console.log(prefix + 'switching to version: ' + version);
         var container = null;
@@ -181,7 +198,7 @@ function ChangeVersion(version) {
         LaunchButtonSelectedVersionText.innerHTML = selectedVersion;
         //dropper
         LaunchButtonVersionContainer.innerHTML = "";
-        GetInstalledVersion(selectedVersionType).then((statList) => {
+        getInstalledVersion(selectedVersionType).then((statList) => {
             for (let i = 0; i < Object.keys(ClientVersion[selectedVersionType]).length; i++) {
                 const version = Object.values(ClientVersion[selectedVersionType])[i];
                 const stat = statList.find((stat) => {
@@ -207,7 +224,7 @@ function ChangeVersion(version) {
                 //add
                 LaunchButtonVersionContainer.appendChild(newVersion);
                 //Save
-                SaveInterface(auth.getLoggedAccount());
+                SaveInterface(authenticator.getLoggedAccount());
             }
         })
 
@@ -219,6 +236,7 @@ function ChangeVersion(version) {
 }
 
 function SaveInterface(user) {
+    if (!initialized) InitInterface()
     var u = user;
     if (u.data == null) {
         u.data = {};
@@ -232,7 +250,7 @@ function SaveInterface(user) {
 }
 
 
-function GetInstalledVersion(clientType) {
+function getInstalledVersion(clientType) {
     return new Promise((resolve, reject) => {
         var VersionList = [];
         switch (clientType) {
@@ -263,4 +281,9 @@ function GetInstalledVersion(clientType) {
     })
 
 }
-module.exports = { resetInterface, setInterfaceInfos, InitInterface }
+
+function getSelectedInfos() {
+    if (!initialized) InitInterface()
+    return { version: selectedVersion, type: selectedVersionType }
+}
+module.exports = { getSelectedInfos, resetInterface, setInterfaceInfos, InitInterface }

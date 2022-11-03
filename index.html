@@ -16,12 +16,10 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/purecss@2.2.0/build/pure-min.css">
     <link rel="stylesheet" href="./style.css">
     <script src="bundle.js"></script>
-    <script src="./menu-functions.js"></script>
-    <script type="module" src="./launcher.js"></script>
 
 </head>
 
-<body class="theme-dark">
+<body class="theme-dark" data-loaded="false">
     <!--[if lt IE 7]>
             <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="#">upgrade your browser</a> to improve your experience.</p>
         <![endif]-->
@@ -38,12 +36,12 @@
                 <p class="app-version"></p>
             </div>
             <div class="right">
-                <button class="menubar-btn" id="minimize-btn"><i class="fas fa-window-minimize"></i></button>
-                <button class="menubar-btn" id="max-unmax-btn"><i class="far fa-square"></i></button>
-                <button class="menubar-btn" id="close-btn"><i class="fas fa-times"></i></button>
+                <button class="menubar-btn" id="minimize-btn"><div class="img icon" style="background-image: url(./ressources/graphics/icons/window-minimize.svg)"></div></button>
+                <button class="menubar-btn" id="max-unmax-btn"><div class="img icon" style="background-image: url(./ressources/graphics/icons/square.svg)"></div></button>
+                <button class="menubar-btn" id="close-btn"><div class="img icon" style="background-image: url(./ressources/graphics/icons/close.svg)"></div></button>
             </div>
         </div>
-        <div id="authPanel">
+        <div id="authPanel" style="display: none;">
             <div class="content">
                 <div class="title-container">
                     <div class="img"></div>
@@ -100,6 +98,9 @@
                     <div id="server-list">
                         <div class="title">
                             <p>Your servers: </p>
+                            <div class="reload" id="reloadServerListButton">
+                                <div class="img"></div>
+                            </div>
                         </div>
                         <div class="list" data-loading="true">
                             <div class="loader">
@@ -220,12 +221,9 @@
 
 
     <!-- You can also require other files to run in this process -->
-    <script src="./renderer.js"></script>
     <script>
-        /*Array.from(document.querySelector("#app").children).forEach((e) => {
-                                                            e.style.opacity = null;
-                                                        })
-                                                        loadPanel.dataset.show = false;*/
+        const {INIT} = require('./renderer');
+        INIT();
     </script>
 </body>
 

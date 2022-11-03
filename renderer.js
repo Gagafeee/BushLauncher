@@ -1,25 +1,25 @@
-Array.from(document.querySelector("#app").children).forEach((e) => {
-    e.style.opacity = 0;
-})
-setTimeout(() => {
-    loadPanel.firstElementChild.classList.remove("pop");
-}, 1000);
-
-
-const { ipcRenderer } = require("electron");
+function setWindowProgressbar(percent, type) {
+    ipcRenderer.send("set-progress-bar", { p: percent, type: type ? type : "normal" });
+}
 const loadPanel = document.querySelector("#loading-panel");
-const { Auth } = require('./authenticator');
-const auth = new Auth();
-const { DataManager } = require("./modules/data-manager.js");
-const logginSaveManager = new DataManager({
-    configName: 'logged-users',
-    defaults: {}
-});
-const { StartGame, ClientType, ClientVersion } = require("./launcher");
-const prefix = "[Loader]: ";
 
+function INIT() {
+    Array.from(document.querySelector("#app").children).forEach((e) => {
+        e.style.opacity = 0;
+    });
 
-window.addEventListener("DOMContentLoaded", () => {
+    setTimeout(() => {
+        loadPanel.firstElementChild.classList.remove("pop");
+    }, 1000);
+    const { ipcRenderer } = require("electron");
+    const authenticator = require('./authenticator');
+    const authPanel = require('./authpanel');
+    const { DataManager } = require("./modules/data-manager.js");
+    const logginSaveManager = new DataManager({
+        configName: 'logged-users',
+        defaults: {}
+    });
+    const prefix = "[Loader]: ";
     //LOAD
     //
 
@@ -43,68 +43,50 @@ window.addEventListener("DOMContentLoaded", () => {
         ipcRenderer.postMessage("minimize-window");
     })
     document.querySelector("#max-unmax-btn").addEventListener("click", () => {
-            const icon = document.querySelector("#max-unmax-btn").firstElementChild;
-            ipcRenderer.invoke("isWindowMaximized").then((isMaximized) => {
-                ipcRenderer.postMessage(isMaximized ? "unmaximize-window" : "maximize-window");
-            })
-            ipcRenderer.invoke("isWindowMaximized").then((isMaximized) => {
-                // Change the middle maximize-unmaximize icons.
-                if (!isMaximized) {
-                    icon.classList.remove("fa-square");
-                    icon.classList.add("fa-clone");
-                } else {
-                    icon.classList.add("fa-square");
-                    icon.classList.remove("fa-clone");
-                }
-            })
+        const icon = document.querySelector("#max-unmax-btn").firstElementChild;
+        ipcRenderer.invoke("isWindowMaximized").then((isMaximized) => {
+            ipcRenderer.postMessage(isMaximized ? "unmaximize-window" : "maximize-window");
+        })
+        ipcRenderer.invoke("isWindowMaximized").then((isMaximized) => {
+            // Change the middle maximize-unmaximize icons.
+            if (!isMaximized) {
+                icon.backgroundImage = "url(./ressources/graphics/icons/clone.svg)";
+            } else {
+                icon.backgroundImage = "url(./ressources/graphics/icons/square.svg)";
+            }
+        })
 
 
-        })
-        /*login buttons*/
-    Array.from(document.getElementsByClassName("btn-log-microsoft")).forEach((e) => {
-            e.addEventListener("click", () => {
-                e.firstElementChild.style.backgroundImage = "url(./ressources/graphics/icons/loading.svg)";
-                auth.LogIn("Microsoft")
-                    .then(() => {
-                        document.querySelector('#authPanel').style.display = "none";
-                        e.firstElementChild.style.backgroundImage = null;
-                    })
-                    .catch((error) => {
-                        console.error(prefix + "cannot Login: " + error);
-                        e.firstElementChild.style.backgroundImage = null;
-                    })
-            })
-        })
-        //logout buttons
-    Array.from(document.getElementsByClassName("btn-logout")).forEach((e) => {
-            e.addEventListener("click", () => {
-                e.querySelector(".img").style.backgroundImage = "url(./ressources/graphics/icons/loading.svg)";
-                auth.logOut();
-                e.querySelector(".img").style.backgroundImage = null;
-            })
-        })
-        /*reauth user (if is posible) */
-    if (auth.isLogged()) {
+    })
+
+    /*reauth user (if is posible) */
+    if (authenticator.isLogged()) {
         console.log(prefix + "detecting save, trying to login...");
-        if (auth.isAccountValid(logginSaveManager.get("loggedUser"))) {
+        if (authenticator.isAccountValid(logginSaveManager.get("loggedUser"))) {
             //the accont is valid, we can use it to launch
             console.log(prefix + "Is valid: using: " + logginSaveManager.get("loggedUser").profile.name);
-            auth.LogIn("internal", logginSaveManager.get("loggedUser"));
-            //hide login panel
-            document.querySelector('#authPanel').style.display = 'none';
+            console.log("not interface");
+            authenticator.LogIn("internal", logginSaveManager.get("loggedUser"));
         } else {
             console.warn(prefix + "save is no valid");
+            authPanel.InitAuthPanel(authenticator);
         }
     } else {
         console.log(prefix + "no user login save");
+        authPanel.InitAuthPanel(authenticator);
     }
-    //
+    //done
     setTimeout(() => {
-
         Array.from(document.querySelector("#app").children).forEach((e) => {
             e.style.opacity = null;
         })
         loadPanel.dataset.show = false;
+        document.querySelector("body").dataset.loaded = true;
+        console.log("show all");
+
     }, 2000);
 
-})
+
+}
+
+module.exports = { setWindowProgressbar, INIT }

@@ -145,13 +145,16 @@
                     <div id="server-list">
                         <div class="title">
                             <p>Your servers: </p>
+                            <div class="reload" id="reloadServerListButton">
+                                <div class="img"></div>
+                            </div>
                         </div>
                         <div class="list" data-loading="false">
                             <div class="loader">
                                 <div class="img"></div>
                             </div>
                             <div class="servers">
-                                <div class="server">
+                                <div class="server" data-is-online="loading">
                                     <div class="button">
                                         <div class="img"></div>
                                         <p>Join</p>
@@ -167,7 +170,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="server">
+                                <div class="server" data-is-online="true" data-version="null">
                                     <div class="button">
                                         <div class="img"></div>
                                         <p>Join</p>
@@ -183,7 +186,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="server">
+                                <div class="server" data-is-online="false">
                                     <div class="button">
                                         <div class="img"></div>
                                         <p>Join</p>
@@ -199,7 +202,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="server unavailable">
+                                <div class="server" data-is-online="true">
                                     <div class="button">
                                         <div class="img"></div>
                                         <p>Join</p>

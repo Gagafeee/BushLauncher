@@ -1,6 +1,6 @@
 const { readInfo, writeInfo, ServerInfo } = require("@xmcl/server-info");
 const fs = require("fs");
-const { locationRoot } = require("./launcher")
+const { locationRoot, ClientVersion } = require("./launcher");
 const seversDatBuffer = fs.readFileSync(locationRoot + "\\servers.dat", null);
 const util = require('minecraft-server-util');
 var initialized = false;
@@ -19,10 +19,16 @@ function getServerList() {
 }
 
 function InitServerList() {
-    var c = document.querySelector("#MainContainer .container.show")
+    var c = document.querySelector("#MainContainer .container.show");
+    const reloadButton = c.querySelector("#reloadServerListButton");
     c = c.querySelector("#server-list") ? c.querySelector("#server-list .list") : false;
     if (c) {
         serverListMainContainer = c;
+        reloadButton.addEventListener("click", () => {
+            getServerList().then((LocalServerList) => {
+                refreshServerList(LocalServerList);
+            })
+        })
         initialized = true;
         console.log(prefix + "initialized");
     } else {
@@ -31,33 +37,41 @@ function InitServerList() {
 
 };
 
-function refreshServerList(LocalServerList, version) {
+function getServerInfos(ip) {
+    return new Promise((resolve, reject) => {
+        const o = {
+            timeout: 1000 * 5,
+            enableSRV: true
+        }
+        util.status(ip.host, ip.port, o).then((r) => {
+            resolve({ infos: r, available: true });
+        }).catch((err) => {
+            resolve({ err: err, available: false });
+        })
+    })
+}
+
+function refreshServerList(LocalServerList) {
     if (!initialized) InitServerList();
     if (initialized) {
         const s = serverListMainContainer.querySelector(".servers");
         s.innerHTML = "";
         for (const LocalServer in LocalServerList) {
             if (LocalServerList.hasOwnProperty.call(LocalServerList, LocalServer)) {
+
                 const e = LocalServerList[LocalServer];
                 const name = e.name;
                 const ip = e.ip;
-                const rcon = e.icon;
-                var version = "version";
-                var isAvailable = null;
-                const o = {
-                    timeout: 1000 * 5,
-                    enableSRV: true
-                }
-                const i = util.parseAddress(ip, 25565);
-                util.statusLegacy(i.host, null, o).then((r) => {
-                        version = r.version.name;
-                        isAvailable = true;
-                    }).catch((err) => {
-                        console.error(prefix + err);
-                    })
+                var rcon = "";
+                var version = "";
+                var isAvailable = "loading";
+                var availableServers = [];
+
                 //create
                 const newServer = document.createElement("div");
                 newServer.className = "server";
+                newServer.dataset.isOnline = isAvailable;
+                newServer.dataset.version = null;
                 //button
                 const btn = document.createElement("div");
                 btn.className = "button";
@@ -72,13 +86,13 @@ function refreshServerList(LocalServerList, version) {
                 const content = document.createElement("div");
                 content.className = "content";
                 //icon
-                const icon = document.createElement("div");
+                const icon = document.createElement("img");
                 icon.className = "logo img";
-                //load rcon
+                icon.src = "./ressources/graphics/images/default-server-icon.webp";
                 content.appendChild(icon);
                 //infos
-                const infos = document.createElement("div");
-                infos.className = "infos";
+                const ServerInfos = document.createElement("div");
+                ServerInfos.className = "infos";
                 //div
                 const d = document.createElement("div");
                 //name
@@ -91,19 +105,47 @@ function refreshServerList(LocalServerList, version) {
                 ipText.className = "ip";
                 ipText.innerText = ip;
                 d.appendChild(ipText);
-                infos.appendChild(d);
+                ServerInfos.appendChild(d);
                 //version
                 const versionText = document.createElement("p");
                 versionText.className = "version";
                 versionText.innerText = version;
-                infos.appendChild(versionText);
-                content.appendChild(infos);
+                ServerInfos.appendChild(versionText);
+                content.appendChild(ServerInfos);
                 newServer.appendChild(content);
                 s.appendChild(newServer);
+                const i = util.parseAddress(ip, 25565);
+                getServerInfos(i)
+                    .then((infos) => {
+                        if (infos.available) {
+                            version = infos.infos.version.name;
+                            isAvailable = infos.available;
+                            newServer.style.order = availableServers.length * -1;
+                            availableServers.push(infos);
 
-                serverListMainContainer.dataset.loading = "false";
+
+                        } else {
+                            version = "Offline";
+                            isAvailable = false;
+                            newServer.style.order = 1;
+                        }
+                        versionText.innerText = version;
+                        newServer.dataset.isOnline = isAvailable;
+                        if (isAvailable) {
+                            rcon = infos.infos.favicon;
+                            if (rcon == null) console.log(ip + ": " + rcon);
+
+                            icon.src = rcon;
+                            icon.style.backgroundImage = "";
+                        };
+
+
+                    })
+
             }
         }
+        serverListMainContainer.dataset.loading = "false";
+        /*Initialized */
 
 
     } else {

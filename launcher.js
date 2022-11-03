@@ -2,7 +2,6 @@ const fs = require("fs");
 const { Client } = require('minecraft-launcher-core');
 const launcher = new Client();
 const { Auth } = require('./authenticator');
-const auth = new Auth();
 const msmc = require("msmc");
 const { DataManager } = require("./modules/data-manager.js");
 const logginSaveManager = new DataManager({
@@ -52,10 +51,10 @@ const prefix = "[Launcher]: ";
 
 function StartGame(clientType, version, updateInterface) {
     if (!isRunning) {
-        updateInterface({ text: "Loading..." });
+        updateInterface({ code: "starting", text: "Loading..." });
         Object.freeze(ClientType);
         Object.freeze(ClientVersion);
-        updateInterface({ text: "Login In..." });
+        updateInterface({ code: "starting", text: "Login In..." });
         if (!auth.isLogged()) {
             console.log("user is not logged !");
             auth.LogIn("Microsoft").then(() => {
@@ -64,7 +63,7 @@ function StartGame(clientType, version, updateInterface) {
         } else {
             console.log("user is logged");
         }
-        updateInterface({ text: "Validating Account..." });
+        updateInterface({ code: "starting", text: "Validating Account..." });
         const user = auth.getLoggedAccount();
         if (!auth.isAccountValid(user)) {
             console.error(prefix + "Cannot Start the game: logged account is not valid");
@@ -74,11 +73,11 @@ function StartGame(clientType, version, updateInterface) {
             if (msmc.errorCheck(user)) {
                 return;
             }
-            updateInterface({ text: "Checking Java..." });
+            updateInterface({ code: "starting", text: "Checking Java..." });
             //If the login works.
             CheckJava().then(() => {
                 let opts = undefined;
-                updateInterface({ text: "Validating parameters..." });
+                updateInterface({ code: "starting", text: "Validating parameters..." });
                 if (clientType == ClientType.VANILLA) {
                     if (Object.values(ClientVersion[ClientType.VANILLA]).includes(version)) {
                         opts = {
@@ -131,31 +130,38 @@ function StartGame(clientType, version, updateInterface) {
                 if (opts != undefined) {
                     //install 
                     console.log(locationRoot);
-                    updateInterface({ text: "Downloading..." });
+                    updateInterface({ code: "starting", text: "Downloading..." });
                     Download(clientType, version).then(() => {
-                        updateInterface({ text: "Starting..." });
-                        console.log("Starting " + clientType + " game in " + opts.version.number + " for: " + user.profile.name + " !");
-                        launcher.launch(opts);
-                        isRunning = true;
+                            updateInterface({ code: "starting", text: "Starting..." });
+                            console.log("Starting " + clientType + " game in " + opts.version.number + " for: " + user.profile.name + " !");
+                            launcher.launch(opts);
+                            isRunning = true;
 
-                    })
+                        })
+                        .catch((err) => {
+                            updateInterface({ code: "error", returnCode: err })
+                        })
 
                 } else {
                     console.error(prefix + "opts can't be set");
+                    updateInterface({ code: "error", returnCode: "Can't set minecraft launch options" })
                 }
 
 
                 launcher.on('debug', (e) => console.log(e));
                 launcher.on('data', (e) => console.log(e));
                 launcher.on('close', (e) => {
-                    updateInterface({ code: e });
+                    updateInterface({ code: "closed", returnCode: e });
                     isRunning = false;
                 });
-                launcher.on('arguments', (e) => updateInterface({ text: "Running", code: -1 }))
+                launcher.on('arguments', (e) => {
+                    updateInterface({ text: "Launched", code: "running" })
+                })
             }).catch(e => {
-                console.error(prefix + "cancel launch: wronk java");
+                console.error(prefix + "cancel launch: " + e);
                 console.error(e);
-                notificationsManager.CreateNotification(NotificationsType.Error, "Please check your Java installation");
+                updateInterface({ code: "error", returnCode: e })
+                notificationsManager.CreateNotification(NotificationsType.Error, e + "  (Please check your Java installation)");
             })
 
         }

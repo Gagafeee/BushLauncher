@@ -162,7 +162,7 @@ div::-webkit-scrollbar-thumb {
     background: rgb(255, 0, 0);
 }
 
-#menu-bar button i {
+#menu-bar button .icon {
     color: white;
 }
 
@@ -769,6 +769,25 @@ div::-webkit-scrollbar-thumb {
     font-family: SquareFont;
     font-size: 3vh;
     margin-top: 1vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#launcher #MainContainer .container.show#VANILLA-container #server-list .title .reload {
+    width: 3vw;
+    height: 100%;
+    position: relative;
+    left: 13vw;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#launcher #MainContainer .container.show#VANILLA-container #server-list .title .reload .img {
+    width: 3vh;
+    height: 3vh;
+    background-image: url(./ressources/graphics/icons/rotate-left.svg);
 }
 
 #launcher #MainContainer .container.show#VANILLA-container #server-list .list {
@@ -788,10 +807,11 @@ div::-webkit-scrollbar-thumb {
     position: absolute;
     bottom: 0;
     right: 0;
-    /*background-color: blue;*/
+    background-color: var(--hover-color);
     display: flex;
     justify-content: center;
     align-items: center;
+    z-index: 20;
 }
 
 #launcher #MainContainer .container.show#VANILLA-container #server-list .list .loader .img {
@@ -805,6 +825,8 @@ div::-webkit-scrollbar-thumb {
     width: 100%;
     height: 100%;
     /*background-color: green;*/
+    display: flex;
+    flex-direction: column;
 }
 
 #launcher #MainContainer .container.show#VANILLA-container #server-list .list .servers .server {
@@ -819,18 +841,28 @@ div::-webkit-scrollbar-thumb {
     border-radius: 10px;
     overflow: hidden;
     margin: 1vh 0 1vh 50%;
+    flex: none;
 }
 
-#launcher #MainContainer .container.show#VANILLA-container #server-list .list .servers .server.unavailable {
+#launcher #MainContainer .container.show#VANILLA-container #server-list .list .servers .server[data-is-online="false"] {
     opacity: 0.4;
 }
-#launcher #MainContainer .container.show#VANILLA-container #server-list .list .servers .server.unavailable .button {
+
+#launcher #MainContainer .container.show#VANILLA-container #server-list .list .servers .server[data-is-online="loading"] {
+    opacity: 0.8;
+}
+
+#launcher #MainContainer .container.show#VANILLA-container #server-list .list .servers .server[data-is-online="false"] .button,
+#launcher #MainContainer .container.show#VANILLA-container #server-list .list .servers .server[data-is-online="loading"] .button {
     border: 0;
 }
 
-#launcher #MainContainer .container.show#VANILLA-container #server-list .list .servers .server.unavailable .button .img {
+#launcher #MainContainer .container.show#VANILLA-container #server-list .list .servers .server[data-is-online="false"] .button .img {
     background-image: url(./ressources/graphics/icons/close.svg);
+}
 
+#launcher #MainContainer .container.show#VANILLA-container #server-list .list .servers .server[data-is-online="loading"] .button .img {
+    background-image: url(./ressources/graphics/icons/loading.svg);
 }
 
 #launcher #MainContainer .container.show#VANILLA-container #server-list .list .servers .server .button {
@@ -845,7 +877,15 @@ div::-webkit-scrollbar-thumb {
     border-radius: 15px;
 }
 
-#launcher #MainContainer .container.show#VANILLA-container #server-list .list .servers .server:not(.unavailable) .button:hover {
+#launcher #MainContainer .container.show#VANILLA-container #server-list .list .servers .server[data-version="null"] .button .img {
+    display: none;
+}
+
+#launcher #MainContainer .container.show#VANILLA-container #server-list .list .servers .server[data-version="null"] .button {
+    border: 0;
+}
+
+#launcher #MainContainer .container.show#VANILLA-container #server-list .list .servers .server[data-is-online="true"]:not([data-version="null"]) .button:hover {
     width: 30%;
     border-radius: 10px;
 }
@@ -854,7 +894,7 @@ div::-webkit-scrollbar-thumb {
     display: none;
 }
 
-#launcher #MainContainer .container.show#VANILLA-container #server-list .list .servers .server:not(.unavailable) .button:hover p {
+#launcher #MainContainer .container.show#VANILLA-container #server-list .list .servers .server[data-is-online="true"]:not([data-version="null"]) .button:hover p {
     display: block;
     font-family: SquareFont;
     font-size: 3.5vh;
@@ -880,7 +920,7 @@ div::-webkit-scrollbar-thumb {
     width: 10vh;
     /*background-color: orange;*/
     margin: 0;
-    background-image: url(./ressources/graphics/images/default-server-icon.webp);
+    background-image: url();
     border-radius: 10px;
 }
 
@@ -894,6 +934,7 @@ div::-webkit-scrollbar-thumb {
     font-size: 3vh;
     font-family: SquareFont;
 }
+
 #launcher #MainContainer .container.show#VANILLA-container #server-list .list .servers .server .content .infos .ip {
     font-size: 2vh;
 }
