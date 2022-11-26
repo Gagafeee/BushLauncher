@@ -81,16 +81,19 @@
                         </div>
                     </div>
                 </div>
+                <div id="devToolButton">
+                    <div class="img"></div>
+                </div>
             </div>
             <div id="side-menu">
                 <div class="version-type" id="VANILLA">
                     <div class="img" style="background-image: url('./ressources/graphics/images/grass_block.webp')"></div>
                     <p class="name">Vanilla</p>
                 </div>
-                <div class="version-type" id="FORGE">
+                <!--<div class="version-type" id="FORGE">
                     <div class="img" style="background-image: url('./ressources/graphics/images/forge_logo.png')"></div>
                     <p class="name">Forge</p>
-                </div>
+                </div>-->
             </div>
             <div id="MainContainer">
                 <div class="container show" id="VANILLA-container">
@@ -103,9 +106,6 @@
                             </div>
                         </div>
                         <div class="list" data-loading="true">
-                            <div class="loader">
-                                <div class="img"></div>
-                            </div>
                             <div class="servers">
                                 <div class="server">
                                     <div class="button">
@@ -172,6 +172,10 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="loader">
+                                <div class="img"></div>
+                            </div>
+
                         </div>
                     </div>
                     <div class="button" id="LaunchButton" data-open="false" data-launching="false">
@@ -222,7 +226,9 @@
 
     <!-- You can also require other files to run in this process -->
     <script>
-        const {INIT} = require('./renderer');
+        const {
+            INIT
+        } = require('./renderer');
         INIT();
     </script>
 </body>

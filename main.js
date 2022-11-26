@@ -40,7 +40,7 @@ const createWindow = () => {
     mainWindow.loadFile('index.html')
 
     // Open the DevTools.
-    mainWindow.webContents.openDevTools()
+    //mainWindow.webContents.openDevTools()
 
 
 }
@@ -90,6 +90,9 @@ app.whenReady().then(() => {
         return app.getVersion();
     })
     ipcMain.on("set-progress-bar", (e, p) => { setProgressBar(p) })
+    ipcMain.on("openDevTool", () => {
+        BrowserWindow.getFocusedWindow().webContents.openDevTools()
+    })
 })
 
 // Quit when all windows are closed, except on macOS. There, it's common
@@ -111,6 +114,7 @@ function setProgressBar(percent) {
         mode: percent.type
     });
 }
+
 
 
 function handleSquirrelEvent(application) {

@@ -1,8 +1,5 @@
-function setWindowProgressbar(percent, type) {
-    ipcRenderer.send("set-progress-bar", { p: percent, type: type ? type : "normal" });
-}
 const loadPanel = document.querySelector("#loading-panel");
-
+const { ipcRenderer } = require("electron");
 function INIT() {
     Array.from(document.querySelector("#app").children).forEach((e) => {
         e.style.opacity = 0;
@@ -11,7 +8,7 @@ function INIT() {
     setTimeout(() => {
         loadPanel.firstElementChild.classList.remove("pop");
     }, 1000);
-    const { ipcRenderer } = require("electron");
+    
     const authenticator = require('./authenticator');
     const authPanel = require('./authpanel');
     const { DataManager } = require("./modules/data-manager.js");
@@ -67,6 +64,13 @@ function INIT() {
             console.log(prefix + "Is valid: using: " + logginSaveManager.get("loggedUser").profile.name);
             console.log("not interface");
             authenticator.LogIn("internal", logginSaveManager.get("loggedUser"));
+            authPanel.InitAuthPanel(authenticator);
+            authPanel.hideAuthPanel();
+            /*devToolButton must be here because we need to contact IpcMain */
+            const devToolButton = document.querySelector("#devToolButton");
+            devToolButton.addEventListener("click", ()=>{
+                ipcRenderer.send("openDevTool");
+            })
         } else {
             console.warn(prefix + "save is no valid");
             authPanel.InitAuthPanel(authenticator);
@@ -89,4 +93,7 @@ function INIT() {
 
 }
 
+function setWindowProgressbar(percent, type) {
+    ipcRenderer.send("set-progress-bar", { p: percent, type: type ? type : "normal" });
+}
 module.exports = { setWindowProgressbar, INIT }

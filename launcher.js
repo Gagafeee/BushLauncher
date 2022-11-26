@@ -1,7 +1,7 @@
 const fs = require("fs");
 const { Client } = require('minecraft-launcher-core');
 const launcher = new Client();
-const { Auth } = require('./authenticator');
+const Auth = require('./authenticator');
 const msmc = require("msmc");
 const { DataManager } = require("./modules/data-manager.js");
 const logginSaveManager = new DataManager({
@@ -9,29 +9,7 @@ const logginSaveManager = new DataManager({
     defaults: {}
 });
 const os = require('node:os');
-const ClientType = {
-    VANILLA: "VANILLA",
-    FORGE: "FORGE"
-}
-const ClientVersion = {
-    [ClientType.VANILLA]: {
-        1192: "1.19.2",
-        1182: "1.18.2",
-        1165: "1.16.5",
-        1144: "1.14.4",
-        1132: "1.13.2",
-        1122: "1.12.2",
-        189: "1.8.9",
-        171: "1.7.10"
-
-
-    },
-    [ClientType.FORGE]: {
-        1192: "1.19.2",
-        1122: "1.12.2"
-    }
-
-}
+const { ClientType, ClientVersion, getVanillaVersionList } = require('./version')
 const getAppDataPath = require('appdata-path');
 const locationRoot = getAppDataPath() + "\\.minecraft";
 const shell = require('electron').shell;
@@ -45,9 +23,10 @@ const XMCLCore = require('@xmcl/core')
 const XMCLInstaller = require('@xmcl/installer');
 const { installForge, getForgeVersionList, getVersionList, ForgeVersionList, ForgeVersion, install, diagnoseInstall } = XMCLInstaller;
 const { MinecraftFolder, ResolvedVersion, Version } = XMCLCore;
+
+
 var isRunning = false;
 const prefix = "[Launcher]: ";
-
 
 function StartGame(clientType, version, updateInterface) {
     if (!isRunning) {
@@ -55,17 +34,17 @@ function StartGame(clientType, version, updateInterface) {
         Object.freeze(ClientType);
         Object.freeze(ClientVersion);
         updateInterface({ code: "starting", text: "Login In..." });
-        if (!auth.isLogged()) {
+        if (!Auth.isLogged()) {
             console.log("user is not logged !");
-            auth.LogIn("Microsoft").then(() => {
+            Auth.LogIn("Microsoft").then(() => {
                 console.log("Logged in !");
             })
         } else {
             console.log("user is logged");
         }
         updateInterface({ code: "starting", text: "Validating Account..." });
-        const user = auth.getLoggedAccount();
-        if (!auth.isAccountValid(user)) {
+        const user = Auth.getLoggedAccount();
+        if (!Auth.isAccountValid(user)) {
             console.error(prefix + "Cannot Start the game: logged account is not valid");
         } else {
 
@@ -287,22 +266,10 @@ function Download(type, version) {
     }
 }
 
-function getVanillaVersionList() {
-    return new Promise((resolve, reject) => {
-        getVersionList().then((responce) => {
-            var VersionList = [];
-            const res = responce.versions;
-            Array.from(res).forEach((e) => {
-                if (e.type == "release") {
-                    VersionList.push(e);
-                }
-            })
 
 
 
-            resolve(VersionList);
-        })
-    })
-}
 
-module.exports = { locationRoot, StartGame, ClientType, ClientVersion, getVanillaVersionList }
+
+
+module.exports = { Download, locationRoot, StartGame }

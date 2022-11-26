@@ -1,4 +1,5 @@
-const { ClientType, ClientVersion, StartGame, getVanillaVersionList, locationRoot } = require('./launcher');
+const { StartGame, locationRoot, StartGameToConnectServer } = require('./launcher');
+const { ClientType, ClientVersion, getVanillaVersionList, } = require('./version')
 const { DataManager } = require("./modules/data-manager.js");
 const logginSaveManager = new DataManager({
     configName: 'logged-users',
@@ -8,7 +9,7 @@ const localDataManager = new DataManager({
     configName: 'localData',
     default: {}
 });
-const { getServerList, refreshServerList } = require('./servers');
+
 const fs = require('fs');
 const { setWindowProgressbar } = require("./renderer");
 const authenticator = require("./authenticator");
@@ -24,14 +25,21 @@ const containers = MainContainer.querySelectorAll(".container");
 const accountPannel = document.querySelector("#account");
 const accountImage = accountPannel.querySelector("#userImage");
 const accountPseudo = accountPannel.querySelector(".username");
+const devToolButton = document.querySelector("#devToolButton");
 
-
+function StartGameConnectServer(version) {
+    const container = MainContainer.querySelector(".show");
+    ChangeVersion(version);
+    StartGame(selectedVersionType, selectedVersion, (Update) => UpdateLaunchingState(Update, container.querySelector("#LaunchButton")));
+}
+const { ServerListModule } = require('./servers');
+const servers = new ServerListModule(StartGameConnectServer);
 
 function InitInterface() {
     if (!initialized) {
         /*Account */
         console.log("init interface");
-        //dropper
+        //Up menu
         accountPannel.addEventListener("click", () => {
             if (accountPannel.dataset.open == "false") {
                 accountPannel.dataset.open = "true";
@@ -39,6 +47,7 @@ function InitInterface() {
                 accountPannel.dataset.open = "false";
             }
         });
+
         /*SideMenu*/
         const data = authenticator.getData(authenticator.getLoggedAccount());
         selectedVersionType = (data != undefined ? (data.selectedVersionType != undefined ? data.selectedVersionType : ClientType.VANILLA) : ClientType.VANILLA)
@@ -108,7 +117,7 @@ function UpdateLaunchingState(LaunchState, Button) {
             }
             break;
         case "error":
-            console.warn(LaunchState.code);
+            console.warn(LaunchState.returnCode);
             setWindowProgressbar(1, "error");
             notificationsManager.CreateNotification(NotificationsType.Error, "An error occurred: " + LaunchState.code)
             break;
@@ -123,7 +132,6 @@ function setInterfaceInfos(user) {
         console.log(prefix + "setting interface info");
         accountImage.src = "https://mc-heads.net/avatar/" + user.profile.name;
         accountPseudo.innerText = user.profile.name;
-        InitInterface();
         ChangeVersionType(selectedVersionType);
         //done
         notificationsManager.CreateNotification(NotificationsType.Info, "Logged successful to: " + user.profile.name + ".", 7000)
@@ -171,9 +179,12 @@ function ChangeVersionType(newVersionType) {
             console.log(prefix + "Version " + selectedVersion + " is not available in " + selectedVersionType + " environment: switching to " + v);
         }
         ChangeVersion(v);
-        /*getServerList().then((LocalServerList) => {
-            refreshServerList(LocalServerList);
-        })*/
+        setTimeout(() => {
+            servers.getServerList().then((LocalServerList) => {
+                servers.refreshServerList(LocalServerList);
+            })
+        }, 500);
+
     } else {
         console.error("cannot change version type: version is not supported");
         console.error(newVersionType);
@@ -286,4 +297,5 @@ function getSelectedInfos() {
     if (!initialized) InitInterface()
     return { version: selectedVersion, type: selectedVersionType }
 }
-module.exports = { getSelectedInfos, resetInterface, setInterfaceInfos, InitInterface }
+
+module.exports = { StartGameConnectServer, getSelectedInfos, resetInterface, setInterfaceInfos, InitInterface }

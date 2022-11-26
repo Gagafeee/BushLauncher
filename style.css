@@ -116,12 +116,14 @@ div::-webkit-scrollbar-thumb {
 }
 
 #menu-bar .img {
-    height: 25px;
-    width: 25px;
+    height: 17px;
+    width: 17px;
     margin-left: 5px;
     margin-right: 5px;
     background-image: url(./ressources/graphics/icon.svg);
 }
+
+
 
 #menu-bar p {
     color: white;
@@ -135,7 +137,7 @@ div::-webkit-scrollbar-thumb {
     font-size: 1rem;
 }
 
-#menu-bar>div {
+#menu-bar > div {
     height: 100%;
     display: flex;
     justify-content: space-between;
@@ -164,6 +166,11 @@ div::-webkit-scrollbar-thumb {
 
 #menu-bar button .icon {
     color: white;
+}
+
+#menu-bar button#close-btn div {
+    height: 24px;
+    width: 24px;
 }
 
 
@@ -391,8 +398,8 @@ div::-webkit-scrollbar-thumb {
 
 #launcher #up-menu {
     height: 8vh;
+    width: 23vw;
     padding: 0 2% 0 2%;
-    /*background-color: red;*/
     display: flex;
     align-items: center;
     flex-direction: row-reverse;
@@ -495,6 +502,25 @@ div::-webkit-scrollbar-thumb {
     font-size: 2.5vh;
 }
 
+#launcher #up-menu #devToolButton {
+    height: 100%;
+    width: 5vw;
+    cursor: pointer;
+    /*background-color: aqua;*/
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 1vw;
+}
+
+#launcher #up-menu #devToolButton:hover {
+    background-color: var(--hover-color);
+}
+#launcher #up-menu #devToolButton .img{
+    height: 70%;
+    width: 70%;
+    background-image: url(./ressources/graphics/icons/terminal.svg);
+}
 
 /*Side Menu*/
 
@@ -875,6 +901,7 @@ div::-webkit-scrollbar-thumb {
     transition: all 0.5s;
     border: 1px solid #fff;
     border-radius: 15px;
+    cursor: pointer;
 }
 
 #launcher #MainContainer .container.show#VANILLA-container #server-list .list .servers .server[data-version="null"] .button .img {
@@ -886,7 +913,7 @@ div::-webkit-scrollbar-thumb {
 }
 
 #launcher #MainContainer .container.show#VANILLA-container #server-list .list .servers .server[data-is-online="true"]:not([data-version="null"]) .button:hover {
-    width: 30%;
+    width: 25%;
     border-radius: 10px;
 }
 
@@ -902,8 +929,9 @@ div::-webkit-scrollbar-thumb {
 
 #launcher #MainContainer .container.show#VANILLA-container #server-list .list .servers .server .button .img {
     background-image: url(./ressources/graphics/icons/caret-right.svg);
-    width: 6vh;
-    height: 6vh;
+    width: 5vh;
+    height: 5vh;
+    margin-right: -5%;
 }
 
 #launcher #MainContainer .container.show#VANILLA-container #server-list .list .servers .server .content {

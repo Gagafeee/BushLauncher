@@ -1,4 +1,5 @@
 var initialized = false;
+const prefix = "[AuthPanel]: ";
 
 function InitAuthPanel(authenticator) {
     if (!initialized) {
@@ -27,8 +28,9 @@ function InitAuthPanel(authenticator) {
                 e.querySelector(".img").style.backgroundImage = null;
             })
         });
-        showAuthPanel()
         initialized = true;
+        console.log(prefix + "initialized");
+        showAuthPanel();
     } else {
         console.warn("auth panel already initialized");
     }
@@ -36,10 +38,12 @@ function InitAuthPanel(authenticator) {
 }
 
 function hideAuthPanel() {
-    document.querySelector("#authPanel").style.display = "";
+    /*if(!initialized) InitAuthPanel(); need autenticator*/
+    document.querySelector("#authPanel").style.display = "none";
 }
 function showAuthPanel() {
+    /*if(!initialized) InitAuthPanel(); need authenticator*/
     document.querySelector("#authPanel").style.display = "";
 }
 
-module.exports = { InitAuthPanel, hideAuthPanel }
+module.exports = { InitAuthPanel, hideAuthPanel, showAuthPanel }
