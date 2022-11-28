@@ -8,6 +8,10 @@ const logginSaveManager = new DataManager({
     configName: 'logged-users',
     defaults: {}
 });
+const optionsDataManager = new DataManager({
+    configName: 'launch-options',
+    defaults: {}
+});
 const os = require('node:os');
 const { ClientType, ClientVersion, getVanillaVersionList } = require('./version')
 const getAppDataPath = require('appdata-path');
@@ -59,6 +63,9 @@ function StartGame(clientType, version, updateInterface) {
                 updateInterface({ code: "starting", text: "Validating parameters..." });
                 if (clientType == ClientType.VANILLA) {
                     if (Object.values(ClientVersion[ClientType.VANILLA]).includes(version)) {
+                        var memory = optionsDataManager.get("ram");
+                        console.log(memory);
+                        memory = memory == undefined ? 6 : memory;
                         opts = {
                             clientPackage: null,
                             authorization: msmc.getMCLC().getAuth(user),
@@ -68,8 +75,8 @@ function StartGame(clientType, version, updateInterface) {
                                 type: "release"
                             },
                             memory: {
-                                max: "6G",
-                                min: "4G"
+                                max: memory + "G",
+                                min: "6G"
                             },
                             javaPath: "C:/Program Files/Java/jdk-" + JavaVersion + "/bin/javaw.exe"
                         }

@@ -9,6 +9,7 @@ const localDataManager = new DataManager({
     configName: 'localData',
     default: {}
 });
+const options = require('./options');
 
 const fs = require('fs');
 const { setWindowProgressbar } = require("./renderer");
@@ -25,7 +26,7 @@ const containers = MainContainer.querySelectorAll(".container");
 const accountPannel = document.querySelector("#account");
 const accountImage = accountPannel.querySelector("#userImage");
 const accountPseudo = accountPannel.querySelector(".username");
-const devToolButton = document.querySelector("#devToolButton");
+const OptionPanel = document.querySelector("#OPTION-container");
 
 function StartGameConnectServer(version) {
     const container = MainContainer.querySelector(".show");
@@ -54,32 +55,38 @@ function InitInterface() {
         selectedVersion = (data != undefined ? (data.selectedVersion != undefined ? data.selectedVersion : ClientVersion[1192]) : ClientVersion[1192])
 
         Array.from(versionTypeSelectorMenuButtons).forEach((c) => {
-                c.addEventListener("click", () => {
-                    ChangeVersionType(c.id);
-                })
+            c.addEventListener("click", () => {
+                ChangeVersionType(c.id);
+            })
+        })
+        document.querySelector("#OPTION").addEventListener("click", () => {
+                OpenOptionsPanel();
             })
             //launchbutton
         Array.from(containers).forEach((container) => {
-            container.querySelector("#LaunchButton").querySelector(".launch").addEventListener("click", () => {
-                const e = container.querySelector("#LaunchButton");
-                if (e.dataset.launching == "false") {
-                    container.querySelector("#LaunchButton").dataset.open = false;
-                    StartGame(selectedVersionType, selectedVersion, (Update) => UpdateLaunchingState(Update, container.querySelector("#LaunchButton")));
-                }
-            })
-            container.querySelector("#LaunchButton").querySelector(".version-selector").addEventListener("click", () => {
-                const e = container.querySelector("#LaunchButton");
-                if (e.dataset.launching == "false") {
-                    if (e.dataset.open == "false") {
-                        e.dataset.open = true;
-                    } else {
-                        e.dataset.open = false;
+            if (container.querySelector("#LaunchButton")) {
+                container.querySelector("#LaunchButton").querySelector(".launch").addEventListener("click", () => {
+                    const e = container.querySelector("#LaunchButton");
+                    if (e.dataset.launching == "false") {
+                        container.querySelector("#LaunchButton").dataset.open = false;
+                        StartGame(selectedVersionType, selectedVersion, (Update) => UpdateLaunchingState(Update, container.querySelector("#LaunchButton")));
                     }
-                }
+                })
+                container.querySelector("#LaunchButton").querySelector(".version-selector").addEventListener("click", () => {
+                    const e = container.querySelector("#LaunchButton");
+                    if (e.dataset.launching == "false") {
+                        if (e.dataset.open == "false") {
+                            e.dataset.open = true;
+                        } else {
+                            e.dataset.open = false;
+                        }
+                    }
 
-            })
+                })
+            }
+
         })
-
+        options.Init();
         initialized = true;
     }
 
@@ -183,7 +190,7 @@ function ChangeVersionType(newVersionType) {
             servers.getServerList().then((LocalServerList) => {
                 servers.refreshServerList(LocalServerList);
             })
-        }, 500);
+        }, 1000);
 
     } else {
         console.error("cannot change version type: version is not supported");
@@ -195,6 +202,7 @@ function ChangeVersion(version) {
     if (!initialized) InitInterface()
     if (Object.values(ClientVersion[selectedVersionType]).includes(version)) {
         console.log(prefix + 'switching to version: ' + version);
+        CloseOptionsPanel();
         var container = null;
         Array.from(containers).forEach((c) => {
             if (c.id == selectedVersionType + "-container") {
@@ -291,6 +299,14 @@ function getInstalledVersion(clientType) {
 
     })
 
+}
+
+function OpenOptionsPanel() {
+    OptionPanel.style.display = "flex";
+}
+
+function CloseOptionsPanel() {
+    OptionPanel.style.display = "none";
 }
 
 function getSelectedInfos() {

@@ -123,8 +123,6 @@ div::-webkit-scrollbar-thumb {
     background-image: url(./ressources/graphics/icon.svg);
 }
 
-
-
 #menu-bar p {
     color: white;
     font-size: 1em;
@@ -137,7 +135,7 @@ div::-webkit-scrollbar-thumb {
     font-size: 1rem;
 }
 
-#menu-bar > div {
+#menu-bar>div {
     height: 100%;
     display: flex;
     justify-content: space-between;
@@ -516,14 +514,22 @@ div::-webkit-scrollbar-thumb {
 #launcher #up-menu #devToolButton:hover {
     background-color: var(--hover-color);
 }
-#launcher #up-menu #devToolButton .img{
+
+#launcher #up-menu #devToolButton .img {
     height: 70%;
     width: 70%;
     background-image: url(./ressources/graphics/icons/terminal.svg);
 }
 
+
 /*Side Menu*/
 
+#launcher #side-menu .versions {
+    width: 100%;
+    height: 90%;
+}
+
+#launcher #side-menu .option,
 #launcher #side-menu .version-type {
     width: 100%;
     height: 9vh;
@@ -540,16 +546,19 @@ div::-webkit-scrollbar-thumb {
     cursor: default;
 }
 
+#launcher #side-menu .option:hover,
 #launcher #side-menu .version-type:hover {
     background-color: var(--hover-color);
 }
 
+#launcher #side-menu .option .img,
 #launcher #side-menu .version-type .img {
     width: 6vh;
     height: 6vh;
     /*background-color: gainsboro;*/
 }
 
+#launcher #side-menu .option .name,
 #launcher #side-menu .version-type .name {
     width: 50%;
     text-align: center;
@@ -571,7 +580,8 @@ div::-webkit-scrollbar-thumb {
     display: none;
 }
 
-#launcher #MainContainer .container.show {
+#launcher #MainContainer .container.show,
+#OPTION-container {
     width: 100%;
     height: 100%;
     /*background-color: red;*/
@@ -987,6 +997,65 @@ div::-webkit-scrollbar-thumb {
 
 
 /**/
+
+
+/*Options Panel*/
+
+#OPTION-container {
+    background-color: var(--black);
+    z-index: 1;
+    position: relative;
+}
+
+#OPTION-container .content {
+    width: 90%;
+    min-height: 90%;
+    margin-top: 5%;
+    background-color: var(--hover-color);
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#OPTION-container .content p {
+    font-family: SquareFont;
+    font-size: 1.5vw;
+}
+
+#OPTION-container .content .title {
+    font-size: 3vw;
+    margin: 1vh 0 1vh 0;
+}
+
+#OPTION-container .content .sub-title {
+    font-size: 2vw;
+    margin: 1vh 0 1vh 0;
+}
+
+#OPTION-container .content .setting {
+    /*background-color: orange;*/
+    width: 70%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#OPTION-container .content .setting .sTitle {
+    min-width: 30%;
+}
+
+#OPTION-container .content .setting .sContent {
+    width: 50%;
+    /*background-color: red;*/
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+}
+
+#OPTION-container .content .setting .sContent input[type="range"] {
+    width: 50%;
+}
 
 
 /**/
