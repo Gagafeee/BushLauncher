@@ -25,12 +25,12 @@ const createWindow = () => {
         minHeight: 550,
         center: true,
         webPreferences: {
-            preload: path.join(__dirname, 'src/preload.js'),
+            preload: path.join(__dirname, 'preload.js'),
             nodeIntegration: true,
             contextIsolation: false
         },
         titleBarStyle: 'hidden',
-        icon: './ressources/graphics/icon.png',
+        icon: './src/ressources/graphics/icon.png',
         titre: 'Bush Launcher',
         transparent: true,
         frame: false
@@ -40,7 +40,7 @@ const createWindow = () => {
     mainWindow.loadFile('src/index.html')
 
     // Open the DevTools.
-    mainWindow.webContents.openDevTools()
+    //mainWindow.webContents.openDevTools()
 
 
 }
