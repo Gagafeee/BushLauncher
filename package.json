@@ -1,0 +1,14 @@
+{
+    "name": "bush-launcher",
+    "version": "0.4.0",
+    "description": "A Minecraft launcher",
+    "main": "src/main.js",
+    "author": "Gagafeee",
+    "license": "MIT",
+    "scripts": {
+      "start": "electron ."
+    },
+    "devDependencies": {
+        "electron": "^21.3.1"
+    }
+}
