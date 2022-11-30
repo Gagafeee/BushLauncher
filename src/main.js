@@ -1,8 +1,8 @@
 'use strict'
 
-import { app, BrowserWindow } from 'electron'
-import * as path from 'path'
-import { format as formatUrl } from 'url'
+const { app, BrowserWindow } = require('electron')
+const path = require('path')
+const { format: formatUrl } = require('url')
 
 const isDevelopment = process.env.NODE_ENV !== 'production'
 
@@ -10,49 +10,59 @@ const isDevelopment = process.env.NODE_ENV !== 'production'
 let mainWindow
 
 function createMainWindow() {
-  const window = new BrowserWindow({webPreferences: {nodeIntegration: true}})
-
-  if (isDevelopment) {
-    window.webContents.openDevTools()
-  }
-  else {
-    window.loadURL(formatUrl({
-      pathname: path.join(__dirname, 'index.html'),
-      protocol: 'file',
-      slashes: true
-    }))
-  }
-
-  window.on('closed', () => {
-    mainWindow = null
-  })
-
-  window.webContents.on('devtools-opened', () => {
-    window.focus()
-    setImmediate(() => {
-      window.focus()
+    const window = new BrowserWindow({
+        width: 800,
+        height: 550,
+        minWidth: 800,
+        minHeight: 550,
+        center: true,
+        webPreferences: {
+            preload: path.join(__dirname, 'preload.js'),
+            nodeIntegration: true,
+            contextIsolation: false
+        },
+        //titleBarStyle: 'hidden',
+        icon: './src/ressources/graphics/icon.png',
+        titre: 'Bush Launcher',
+        //transparent: true,
+        //frame: false
     })
-  })
+    window.loadFile('src/index.html');
 
-  return window
+    if (isDevelopment) {
+        window.webContents.openDevTools()
+    }
+
+    window.on('closed', () => {
+        mainWindow = null
+    })
+
+    window.webContents.on('devtools-opened', () => {
+        window.focus()
+        setImmediate(() => {
+            window.focus()
+        })
+    })
+
+    return window
 }
 
 // quit application when all windows are closed
 app.on('window-all-closed', () => {
-  // on macOS it is common for applications to stay open until the user explicitly quits
-  if (process.platform !== 'darwin') {
-    app.quit()
-  }
+    // on macOS it is common for applications to stay open until the user explicitly quits
+    if (process.platform !== 'darwin') {
+        app.quit()
+    }
 })
 
 app.on('activate', () => {
-  // on macOS it is common to re-create a window even after all windows have been closed
-  if (mainWindow === null) {
-    mainWindow = createMainWindow()
-  }
+    // on macOS it is common to re-create a window even after all windows have been closed
+    if (mainWindow === null) {
+        mainWindow = createMainWindow()
+    }
 })
 
 // create main BrowserWindow when electron is ready
 app.on('ready', () => {
-  mainWindow = createMainWindow()
+    mainWindow = createMainWindow()
 })
