@@ -6,9 +6,68 @@
     "author": "Gagafeee",
     "license": "MIT",
     "scripts": {
-      "start": "electron ."
+        "start": "electron .",
+        "pack": "electron-builder --dir",
+        "dist": "electron-builder"
     },
     "devDependencies": {
-        "electron": "^21.3.1"
+        "electron": "^21.3.1",
+        "electron-builder": "^23.6.0"
+    },
+    "repository": "https://github.com/Gagafeee/BushLauncher.git",
+    "packageManager": "yarn@3.3.0",
+    "config": {
+        "forge": {
+            "packagerConfig": {
+                "icon": "./build/icon.ico"
+            },
+            "makers": [
+                {
+                    "name": "@electron-forge/maker-squirrel",
+                    "config": {
+                        "name": "bush-launcher",
+                        "setupIcon": "./build/icon.ico"
+                    }
+                },
+                {
+                    "name": "@electron-forge/maker-zip",
+                    "platforms": [
+                        "darwin"
+                    ]
+                },
+                {
+                    "name": "@electron-forge/maker-deb",
+                    "config": {
+                        "options": {
+                            "icon": "./build/icon.ico"
+                        }
+                    }
+                },
+                {
+                    "name": "@electron-forge/maker-rpm",
+                    "config": {}
+                }
+            ]
+        }
+    },
+    "build": {
+        "appId": "com.gagafeee.bushluncher",
+        "productName": "Bush Launcher",
+        "productionName": "Bush Launcher",
+        "compression": "maximum",
+        "directory": {
+            "output": "out"
+        },
+        "nsis": {
+            "allowToChangeInstallationDirectory": true,
+            "oneClick": false
+        },
+        "win": {
+            "target": "NSIS",
+            "icon": "./build/icon.ico"
+        },
+        "files": [
+            "build/*"
+        ]
     }
 }
