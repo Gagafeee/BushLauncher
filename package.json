@@ -1,7 +1,7 @@
 {
     "name": "bush-launcher",
     "productName": "Bush Launcher",
-    "version": "0.4.0",
+    "version": "0.3.7",
     "description": "A Minecraft launcher",
     "main": "src/main.js",
     "author": "Gagafeee",
@@ -12,8 +12,11 @@
         "dist": "electron-builder"
     },
     "devDependencies": {
+        "axios": "^1.2.0",
+        "babel": "^6.23.0",
         "electron": "^21.3.1",
-        "electron-builder": "^23.6.0"
+        "electron-builder": "^23.6.0",
+        "octokit": "^2.0.10"
     },
     "repository": "https://github.com/Gagafeee/BushLauncher.git",
     "packageManager": "yarn@3.3.0",
@@ -70,5 +73,8 @@
         "files": [
             "build/*"
         ]
+    },
+    "dependencies": {
+        "file-saver": "^2.0.5"
     }
 }

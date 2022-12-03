@@ -1,8 +1,11 @@
 'use strict'
-
-const { app, BrowserWindow } = require('electron')
+const { app, BrowserWindow, ipcMain } = require('electron')
 const path = require('path')
-const { format: formatUrl } = require('url')
+const downloader = require('./scripts/downloader');
+const axios = require("axios");
+const { createWriteStream, existsSync, unlinkSync, copyFile, readFileSync } = require("fs");
+const { join } = require('path');
+
 
 const isDevelopment = process.env.NODE_ENV !== 'production'
 
@@ -10,6 +13,7 @@ const isDevelopment = process.env.NODE_ENV !== 'production'
 let mainWindow
 
 function createMainWindow() {
+
     const window = new BrowserWindow({
         width: 800,
         height: 550,
@@ -21,13 +25,13 @@ function createMainWindow() {
             nodeIntegration: true,
             contextIsolation: false
         },
-        //titleBarStyle: 'hidden',
+        titleBarStyle: 'hidden',
         icon: './src/ressources/graphics/icon.png',
         titre: 'Bush Launcher',
-        //transparent: true,
-        //frame: false
+        transparent: true,
+        frame: false
     })
-    window.loadFile('src/index.html');
+    window.loadFile('src/loading.html');
 
     if (isDevelopment) {
         window.webContents.openDevTools()
@@ -44,25 +48,86 @@ function createMainWindow() {
         })
     })
 
-    return window
+    return window;
+
 }
 
 // quit application when all windows are closed
 app.on('window-all-closed', () => {
-    // on macOS it is common for applications to stay open until the user explicitly quits
-    if (process.platform !== 'darwin') {
-        app.quit()
-    }
+        // on macOS it is common for applications to stay open until the user explicitly quits
+        if (process.platform !== 'darwin') {
+            app.quit()
+        }
+    })
+    // create main BrowserWindow when electron is ready
+app.on('ready', () => {
+    setTimeout(() => {
+        mainWindow = createMainWindow();
+
+    }, 300);
+
+})
+ipcMain.on("closeApp", () => {
+    app.quit();
+})
+ipcMain.handle("getTempPath", () => {return app.getPath("temp")})
+ipcMain.handle("checkForUpdates", () => {
+    return new Promise((resolve, reject) => {
+        downloader.checkForUpdatesExist().then((potientialUpdate) => {
+                resolve(potientialUpdate);
+            })
+            .catch((err) => {
+                console.error("Cannot get if newer version exist:")
+                console.error(err);
+                reject(err);
+            })
+    })
 })
 
-app.on('activate', () => {
+ipcMain.handle("DownloadUpdate", (e, url) => {
+    return new Promise((resolve, reject) => {
+        console.log("updating...");
+        console.log("downloading : " + url);
+        axios({
+            url: [url],
+            method: 'get',
+            responseType: "stream",
+            onDownloadProgress: (progressEvent) => {
+                const DownloadPercentage = Math.ceil(((progressEvent.loaded * 100) / progressEvent.total * 1) / 1);
+                console.log("Downloading: " + DownloadPercentage + "%");
+                mainWindow.webContents.send("DownloadUpdate:updateCallback", DownloadPercentage);
+
+            },
+        }).then((axiosResponse) => {
+            try {
+                // You can replace .berry with anything you want except .asar!
+                const tempDir = app.getPath("temp");
+                console.log(tempDir);
+                axiosResponse.data.pipe(createWriteStream(join(tempDir, "bushLauncherUpdate.exe")))
+                    .on("finish", () => {
+                        resolve(join(tempDir, "bushLauncherUpdate.exe"));
+                    })
+                    .on("error", (error) => { reject(error) })
+                    .on("onDownloadProgress", (progress) => { console.log(progress); });
+
+            } catch (err) {
+                console.error(err);
+                reject(err);
+            };
+        }).catch(() => {
+            reject("Couldn't update, please restart the launcher.");
+            console.error("Couldn't download the update");
+        });
+    })
+
+})
+
+
+
+
+/*app.on('activate', () => {
     // on macOS it is common to re-create a window even after all windows have been closed
     if (mainWindow === null) {
         mainWindow = createMainWindow()
     }
-})
-
-// create main BrowserWindow when electron is ready
-app.on('ready', () => {
-    mainWindow = createMainWindow()
-})
+})*/
