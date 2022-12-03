@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="./ressources/css/main.css">
+    <!--Modules-->
+    <script>
+        console.log('Loading Modules')
+    </script>
+    <link rel="stylesheet" href="./modules/notifications/notifications.css">
+    <div id="notification-container"></div>
+    <script src="./modules/notifications/notifications.js"></script>
+
+</head>
+
+<body class="theme-dark">
+    <!--Load frame menu-->
+    <div id="MENU"></div>
+    <script>
+        const $ = require('jquery');
+        $("#MENU").load("./ressources/frames/menu/menu.html");
+    </script>
+    <!--Start-->
+    <script>
+        const renderer = require('./renderer')
+        window.addEventListener("DOMContentLoaded", () => {
+            renderer.Start()
+        })
+    </script>
+</body>
+
+</html>

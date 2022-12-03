@@ -1,0 +1,101 @@
+@font-face {
+    font-family: Terabite;
+    src: url(../fonts/TerabiteRegular.ttf);
+}
+
+@font-face {
+    font-family: Zelta-six;
+    src: url(../fonts/Zelta-Six.otf);
+}
+
+@font-face {
+    font-family: SquareFont;
+    src: url(../fonts/Square.ttf);
+}
+
+@font-face {
+    font-family: SquareFont-outline;
+    src: url(../fonts/Squareo.ttf);
+}
+
+.theme-dark {
+    --background-color: #1E1D1D;
+    --secondary-background-color: #302F2F;
+    --hover-background-color: #5A5858;
+    --bush-background-color: #252D27;
+    --text-color: #FFF;
+    --unvalid: #932A2A;
+    --unvalid-secondary: #633434;
+    --valid: #39C457;
+    --valid-secondary: #2D8640;
+    --bush-primary: #1E954D;
+}
+
+
+/*apply theme*/
+
+body {
+    user-select: none;
+    overflow: hidden;
+}
+
+.img {
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: contain;
+}
+
+.h-line {
+    height: 1px;
+    background-color: var(--text-color);
+    border-radius: 10px;
+}
+
+.v-line {
+    width: 1px;
+    background-color: var(--text-color);
+    border-radius: 10px;
+}
+
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    color: var(--text-color);
+    margin: 0;
+}
+
+
+/*scrollbar*/
+
+div::-webkit-scrollbar {
+    width: 8px;
+}
+
+div::-webkit-scrollbar-thumb {
+    background: var(--hover-background-color);
+    border-radius: 8px;
+}
+
+#app {
+    width: 100vw;
+    height: calc(100vh - 30px);
+    margin-top: 30px;
+}
+
+#layout {
+    width: 100vw;
+    height: 100%;
+    background-color: var(--background-color);
+}
+
+#layout #MainContainer {
+    width: 100vw;
+    height: 100vh;
+}
+
+
+/**/

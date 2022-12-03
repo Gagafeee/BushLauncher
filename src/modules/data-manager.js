@@ -1,29 +1,23 @@
 const path = require('path');
 const fs = require('fs');
-class DataManager {
+//this is the base class
+class FileManager {
     constructor(opts) {
-        // Renderer process has to get `app` module via `remote`, whereas the main process can get it directly
-        // app.getPath('userData') will return a string of the user's app data directory path.
-
-        // We'll use the `configName` property to set the file name and path.join to bring it all together as a string
-        this.path = path.join("", opts.configName + '.json');
-
-        this.data = parseDataFile(this.path, opts.defaults);
-    }
-
-    // This will just return the property on the `data` object
+            this.filePath = path.join("", opts.fileName + '.json');
+            this.data = parseDataFile(this.FilePath, (opts.defaults ? opts.default : {}));
+        }
+        // This will just return the property on the `data` object
     get(key) {
-        return this.data[key];
-    }
-
-    // ...and this will set it
+            return this.data[key];
+        }
+        // ...and this will set it
     set(key, val) {
         this.data[key] = val;
         // Wait, I thought using the node.js' synchronous APIs was bad form?
         // We're not writing a server so there's not nearly the same IO demand on the process
         // Also if we used an async API and our app was quit before the asynchronous write had a chance to complete,
         // we might lose that data. Note that in a real app, we would try/catch this.
-        fs.writeFileSync(this.path, JSON.stringify(this.data));
+        fs.writeFileSync(this.FilePath, JSON.stringify(this.data));
     }
 }
 
@@ -38,5 +32,8 @@ function parseDataFile(filePath, defaults) {
     }
 }
 
-// expose the class
-module.exports = { DataManager };
+//add a new manager for each files
+const AccountsFileManager = new FileManager({
+    fileName: "AccountList"
+})
+module.exports = { AccountsFileManager }

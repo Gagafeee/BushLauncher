@@ -4,15 +4,19 @@ const isNetworkAvailable = navigator.onLine;
 const text = document.querySelector("#state");
 var child = require('child_process').execFile;
 var loaded = false;
+const prefix = "[Loader]: ";
 
-function Start() {
+function preLoad() {
     if (!loaded) {
-        console.log("STARTING");
+        console.log(prefix + "STARTING");
         let offline = false;
+
+        //check network
         if (!isNetworkAvailable) {
             text.innerText = "Starting Offline mode";
             offline = true;
         }
+        //check for updates
         if (!offline) {
             checkForUpdatesProcess().then(() => {
                 text.innerText = "there isn't any updates available";
@@ -21,16 +25,16 @@ function Start() {
                     const downloadFilePath = tempPath + "\\bushLauncherUpdate.exe";
                     if (fs.existsSync(downloadFilePath)) {
                         fs.unlinkSync(downloadFilePath);
-                        console.log("Found download file in temp, deleting it");
+                        console.log(prefix + "Found download file in temp, deleting it");
                     }
                 })
+                loaded = true;
+                ipcRenderer.postMessage("starting:ChekedForUpdate");
 
             })
         }
-        /* */
 
 
-        loaded = true;
     } else {
         console.error("FATAL: APP ALREADY LOADED");
     }
@@ -106,4 +110,45 @@ function UpdateDownloadState(e, percent) {
     text.innerText = "Downloading... [" + percent + "%]";
 }
 
-module.exports = { Start }
+function Start() {
+    console.log(prefix + "starting...");
+
+    /*replace all version textes */
+    ipcRenderer.invoke("getVersion").then((version) => {
+            Array.from(document.querySelectorAll(".app-version")).forEach((e) => {
+                e.innerText = version;
+            })
+        })
+        //
+        /*Loading menu */
+    document.querySelector("#MENU").addEventListener("dblclick", () => {
+        ipcRenderer.invoke("isWindowMaximized").then((isMaximized) => {
+            ipcRenderer.postMessage(isMaximized ? "unmaximize-window" : "maximize-window");
+        })
+    })
+    document.querySelector("#close-btn").addEventListener("click", () => {
+        ipcRenderer.postMessage("closeApp");
+    });
+    document.querySelector("#minimize-btn").addEventListener("click", () => {
+        ipcRenderer.postMessage("minimize-window");
+    })
+    document.querySelector("#max-unmax-btn").addEventListener("click", () => {
+            const icon = document.querySelector("#max-unmax-btn").firstElementChild;
+            ipcRenderer.invoke("isWindowMaximized").then((isMaximized) => {
+                ipcRenderer.postMessage(isMaximized ? "unmaximize-window" : "maximize-window");
+            })
+            ipcRenderer.invoke("isWindowMaximized").then((isMaximized) => {
+                // Change the middle maximize-unmaximize icons.
+                if (!isMaximized) {
+                    icon.backgroundImage = "url(./ressources/graphics/icons/clone.svg)";
+                } else {
+                    icon.backgroundImage = "url(./ressources/graphics/icons/square.svg)";
+                }
+            })
+
+
+        })
+        /**/
+}
+
+module.exports = { preLoad, Start }

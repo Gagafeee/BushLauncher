@@ -1294,6 +1294,11 @@
     "filelist" "^1.0.1"
     "minimatch" "^3.0.4"
 
+"jquery@^3.6.1":
+  "integrity" "sha512-opJeO4nCucVnsjiXOE+/PcCgYw9Gwpvs/a6B1LL/lQhwWwpbVEVYDZ1FokFr8PRc7ghYlrFPuyHuiiDNTQxmcw=="
+  "resolved" "https://registry.npmjs.org/jquery/-/jquery-3.6.1.tgz"
+  "version" "3.6.1"
+
 "js-yaml@^4.1.0":
   "integrity" "sha512-wpxZs9NoxZaJESJGIZTyDEaYpl0FKSA+FB9aJiyemKhMwkxQg63h4T1KJgUGHpTqPDNRcmmYLugrRjJlBtWvRA=="
   "resolved" "https://registry.npmjs.org/js-yaml/-/js-yaml-4.1.0.tgz"

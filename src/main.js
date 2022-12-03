@@ -1,13 +1,23 @@
 'use strict'
-const { app, BrowserWindow, ipcMain } = require('electron')
+const { app, BrowserWindow, ipcMain, Menu } = require('electron')
 const path = require('path')
 const downloader = require('./scripts/downloader');
 const axios = require("axios");
 const { createWriteStream, existsSync, unlinkSync, copyFile, readFileSync } = require("fs");
 const { join } = require('path');
 
-
+const isMac = process.platform === "darwin";
 const isDevelopment = process.env.NODE_ENV !== 'production'
+
+//setting frame top menu
+const template = [{
+    label: "File",
+    submenu: [isMac ? { role: "close" } : { role: "quit" }],
+}, ];
+const menu = Menu.buildFromTemplate(template);
+Menu.setApplicationMenu(menu);
+module.exports = { menu };
+
 
 // global reference to mainWindow (necessary to prevent window from being garbage collected)
 let mainWindow
@@ -47,7 +57,26 @@ function createMainWindow() {
             window.focus()
         })
     })
+    ipcMain.on('minimize-window', () => {
+        BrowserWindow.getFocusedWindow().minimize();
+    })
 
+    ipcMain.handle("isWindowMaximized", async() => {
+        return BrowserWindow.getFocusedWindow().isMaximized();
+    })
+    ipcMain.on('maximize-window', () => {
+        BrowserWindow.getFocusedWindow().maximize();
+    })
+    ipcMain.on('unmaximize-window', () => {
+        BrowserWindow.getFocusedWindow().unmaximize();
+    })
+    ipcMain.handle("getVersion", () => {
+        return app.getVersion();
+    })
+    ipcMain.on("set-progress-bar", (e, p) => { setProgressBar(p) })
+    ipcMain.on("openDevTool", () => {
+        BrowserWindow.getFocusedWindow().webContents.openDevTools()
+    })
     return window;
 
 }
@@ -63,14 +92,17 @@ app.on('window-all-closed', () => {
 app.on('ready', () => {
     setTimeout(() => {
         mainWindow = createMainWindow();
-
+        ipcMain.on("starting:ChekedForUpdate", () => {
+            mainWindow.loadFile("./src/app.html");
+        })
     }, 300);
 
 })
 ipcMain.on("closeApp", () => {
     app.quit();
 })
-ipcMain.handle("getTempPath", () => {return app.getPath("temp")})
+
+ipcMain.handle("getTempPath", () => { return app.getPath("temp") })
 ipcMain.handle("checkForUpdates", () => {
     return new Promise((resolve, reject) => {
         downloader.checkForUpdatesExist().then((potientialUpdate) => {

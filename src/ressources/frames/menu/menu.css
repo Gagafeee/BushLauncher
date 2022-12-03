@@ -1,0 +1,73 @@
+#MENU {
+    position: fixed;
+    top: 0;
+    left: 0;
+    display: flex;
+    justify-content: space-between;
+    height: 30px;
+    width: 100vw;
+    background: var(--background-color);
+    -webkit-app-region: drag;
+    z-index: 99;
+    overflow: hidden;
+}
+
+#MENU .img {
+    height: 17px;
+    width: 17px;
+    margin-left: 5px;
+    margin-right: 5px;
+}
+
+#MENU p {
+    color: white;
+    font-size: 1em;
+    font-family: Terabite;
+}
+
+#MENU .app-version {
+    font-family: SquareFont;
+    margin-left: 5px;
+    font-size: 1rem;
+}
+
+#MENU > div {
+    height: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#MENU .menubar-btn {
+    -webkit-app-region: no-drag;
+}
+
+#MENU button {
+    height: 100%;
+    padding: 0 10px;
+    border: none;
+    background: transparent;
+    outline: none;
+}
+
+#MENU button:hover {
+    background: rgba(221, 221, 221, 0.2);
+}
+
+#MENU #close-btn:hover {
+    background: rgb(255, 0, 0);
+}
+
+#MENU button .icon {
+    color: white;
+}
+
+#MENU button#close-btn div {
+    height: 24px;
+    width: 24px;
+}
+
+#MENU .left .img {
+    width: 30px;
+    height: 30px;
+}

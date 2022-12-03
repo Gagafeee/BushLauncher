@@ -3,7 +3,7 @@ const fs = require('fs');
 const axios = require("axios");
 const pkg = require("../../package.json").version;
 const { Octokit } = require("octokit");
-const octokit = new Octokit({ auth: `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` })
+const octokit = new Octokit({ auth: `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` })
 const { createWriteStream, existsSync, unlinkSync, copyFile, readFileSync } = require("fs");
 var FileSaver = require('file-saver');
 
@@ -56,39 +56,4 @@ function compareVersion(v1, v2) {
 }
 
 
-function asFile(axiosResponse) {
-    return new Promise((resolve, reject) => {
-        try {
-            // You can replace .bush with anything you want except .asar!
-
-            const tempDir = app.getPath() + "/temp/";
-            console.log(tempDir);
-            console.log(axiosResponse);
-            axiosResponse.data.pipe(createWriteStream(join(tempDir, "app.bush")))
-                .on("finish", () => {
-                    copyFile(join(tempDir, "app.bush"), join(tempDir, "app.asar"), (err) => {
-                        if (err) {
-                            console.error("Couldn't copy update file");
-                            console.error(err);
-                            reject(err);
-                        } else {
-                            console.log("Update is completed, restarting...");
-                            resolve(true);
-                            unlinkSync(join(tempDir, "app.bush"));
-                        }
-                    });
-                    resolve(true);
-                }).catch((err) => {
-                    console.error(err);
-                    reject(err);
-                    axiosResponse
-                })
-                .on("error", reject);
-
-        } catch (err) {
-            console.error(err);
-            reject(err);
-        };
-    })
-}
-module.exports = { checkForUpdatesExist, asFile }
+module.exports = { checkForUpdatesExist }
