@@ -3,7 +3,7 @@ const fs = require('fs');
 const axios = require("axios");
 const pkg = require("../../package.json").version;
 const { Octokit } = require("octokit");
-const octokit = new Octokit({ auth: `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` })
+const octokit = new Octokit()
 const { createWriteStream, existsSync, unlinkSync, copyFile, readFileSync } = require("fs");
 var FileSaver = require('file-saver');
 

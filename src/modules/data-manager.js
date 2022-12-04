@@ -4,7 +4,7 @@ const fs = require('fs');
 class FileManager {
     constructor(opts) {
             this.filePath = path.join("", opts.fileName + '.json');
-            this.data = parseDataFile(this.FilePath, (opts.defaults ? opts.default : {}));
+            this.data = parseDataFile(this.filePath, (opts.defaults ? opts.default : {}));
         }
         // This will just return the property on the `data` object
     get(key) {
@@ -17,7 +17,33 @@ class FileManager {
         // We're not writing a server so there's not nearly the same IO demand on the process
         // Also if we used an async API and our app was quit before the asynchronous write had a chance to complete,
         // we might lose that data. Note that in a real app, we would try/catch this.
-        fs.writeFileSync(this.FilePath, JSON.stringify(this.data));
+        fs.writeFileSync(this.filePath, JSON.stringify(this.data));
+    }
+    add(key, val, pos) {
+        let list = this.get(key);
+        list = (typeof list === "object" ? list : [])
+        console.log(list);
+        let newList;
+        if (typeof pos === undefined) {
+            newList = [...list, val];
+        }else{
+            newList = list;
+            newList.splice(pos, 0, val);
+            console.log(newList);
+        }
+        
+        
+        this.set(key, newList);
+    }
+    remove(key, id) {
+        let list = this.get(key);
+        list = Array.from(typeof list === "object" ? list : [])
+        list.splice(id, 1);
+        this.set(key, list);
+    }
+    replace(key, val, pos){
+        this.add(key, val, pos);
+        this.remove(key, pos+1);
     }
 }
 

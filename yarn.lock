@@ -1529,7 +1529,14 @@
   "resolved" "https://registry.npmjs.org/ms/-/ms-2.0.0.tgz"
   "version" "2.0.0"
 
-"node-fetch@^2.6.7":
+"msmc@^3.1.3":
+  "integrity" "sha512-qYTE8XciN/TgxwrCfxH3tJriK6qI6Vn0KLTtAXSKeKX9xa4jkD3Mo9cyhisDReY2LQIUvBa/nEynz1qY9WWwew=="
+  "resolved" "https://registry.npmjs.org/msmc/-/msmc-3.1.3.tgz"
+  "version" "3.1.3"
+  dependencies:
+    "node-fetch" "2.x"
+
+"node-fetch@^2.6.7", "node-fetch@2.x":
   "integrity" "sha512-ZjMPFEfVx5j+y2yF35Kzx5sF7kDzxuDj6ziH4FFbOp87zKDZNx8yExJIb05OGF4Nlt9IHFIMBkRl41VdvcNdbQ=="
   "resolved" "https://registry.npmjs.org/node-fetch/-/node-fetch-2.6.7.tgz"
   "version" "2.6.7"
