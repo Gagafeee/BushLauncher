@@ -42,7 +42,7 @@ function preLoad() {
                 })
             }
             checkForUpdatesProcess().then(() => {
-                text.innerText = "there isn't any updates available";
+                text.innerText = "Loading...";
                 //if download file exist in temp delete it
                 ipcRenderer.invoke("getTempPath").then((tempPath) => {
                     const downloadFilePath = tempPath + "\\bushLauncherUpdate.exe";
@@ -52,7 +52,10 @@ function preLoad() {
                     }
                 })
                 loaded = true;
-                ipcRenderer.postMessage("starting:ChekedForUpdate");
+                setTimeout(() => {
+                    ipcRenderer.postMessage("starting:ChekedForUpdate");
+                }, 2000);
+
 
             })
         }
@@ -110,10 +113,29 @@ ipcRenderer.on("DownloadUpdate:updateCallback", UpdateDownloadState)
 function UpdateDownloadState(e, percent) {
     text.innerText = "Downloading... [" + percent + "%]";
 }
+//////////////////////////////////////////////////
+class INTERFACE {
+    constructor() {
+        const { notificationsManager, NotificationsType } = require('./modules/notifications/notifications');
+        const { Authenticator, authProviderType } = require('./modules/authenticator');
+
+        this.isLogged = Authenticator.isAccountLogged();
+    }
+    setUp(isLogged) {
+        console.log("Loading interface logged: " + isLogged);
+    }
+    SwitchToTab(tab) {
+
+    }
+    SwitchToVersion(version) {
+
+    }
+}
 
 function Start() {
     const { notificationsManager, NotificationsType } = require('./modules/notifications/notifications');
     const { Authenticator, authProviderType } = require('./modules/authenticator');
+    const { WaitLogin } = require('./modules/authPanel/authPanel');
     const loader = document.querySelector("#MainLoader");
 
     const Setup = () => {
@@ -168,29 +190,32 @@ function Start() {
                     account: Authenticator.getAccount(Authenticator.getLastLoggedAccountId())
                 }
                 const Validate = () => {
-                        return new Promise((resolve, reject) => {
-                            if (!Authenticator.isAccountValid(account.account)) {
-                                //user must reconnect to his account
-                                console.log(prefix + processPrefix + "Selected Account no longer valid, waiting for reconect");
-                                Authenticator.validateMSAccount(account.id).then(() => {
-                                    resolve(true)
-                                }).catch((err) => {
-                                    console.error(err);
-                                    resolve(false);
-                                });
-                            } else {
-                                console.log(prefix + processPrefix + "Account already valid");
+                    return new Promise((resolve, reject) => {
+                        if (!Authenticator.isAccountValid(account.account)) {
+                            //user must reconnect to his account
+                            console.log(prefix + processPrefix + "Selected Account no longer valid, waiting for reconect");
+                            const notificationId = notificationsManager.CreateNotification(NotificationsType.Info, "Please re-authenticate your account: " + account.account.username)
+                            Authenticator.validateMSAccount(account.id).then(() => {
+                                notificationsManager.close(notificationId);
                                 resolve(true)
-                            }
-                        })
+                            }).catch((err) => {
+                                console.error(err);
+                                resolve(false);
+                            });
+                        } else {
+                            console.log(prefix + processPrefix + "Account already valid");
+                            resolve(true)
+                        }
+                    })
 
-                    }
-                    //login
+                }
+
+                //login
                 Validate().then((isValid) => {
                     if (isValid) {
                         Authenticator.Login(authProviderType.RAW, account.account).then(() => {
                             Authenticator.SwitchToAccount(account.id);
-                            resolve(account)
+                            resolve(account);
                         }).catch((err) => {
                             notificationsManager.CreateNotification(NotificationsType.Error, "Cannot loggin: " + err)
                             console.error(err);
@@ -206,9 +231,17 @@ function Start() {
 
             } else {
                 console.log(prefix + processPrefix + "No account exists");
-                //there is no account to log
-                //display login panel
-                console.log("login panel");
+                loader.style.display = "none";
+                WaitLogin().then((loggedAccount) => {
+
+                    //Authenticator.login must be called before to set the vars
+                    const account = {
+                        id: Authenticator.getLastLoggedAccountId(),
+                        account: Authenticator.getAccount(Authenticator.getLastLoggedAccountId())
+                    }
+                    resolve(account)
+                    loader.style.display = "";
+                })
             }
         })
     }
@@ -218,9 +251,18 @@ function Start() {
     Setup().then(() => {
         console.log(prefix + "Login in...");
         Login().then((account) => {
+            notificationsManager.CreateNotification(NotificationsType.Info, "Welcome " + account.account.username, 5000)
+
+            console.log(prefix + "Preparing Interface...");
+            const interface = new INTERFACE()
+            interface.setUp(account.logged)
+
             console.log(prefix + "Loaded Successfully");
-            loader.style.display = "none";
-            notificationsManager.CreateNotification(NotificationsType.Info, "Logged as: " + account.account.username, 5000)
+            //ALL DONE
+            setTimeout(() => {
+                loader.style.display = "none";
+            }, 2000);
+
         }).catch((err) => {
             console.error(prefix + "Cannot load" + err);
         })
@@ -236,5 +278,8 @@ function Start() {
     /**/
 
 }
+
+
+
 
 module.exports = { preLoad, Start }

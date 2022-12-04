@@ -17,15 +17,23 @@
         const $ = require('jquery');
         $("#MENU").load("./ressources/frames/menu/menu.html");
     </script>
+    <div id="MainLoader" class="loader">
+        <div class="img"></div>
+    </div>
     <!--Modules-->
     <script>
-        console.log('Loading Modules')
+        console.log('[DOM]: Loading Modules')
     </script>
+    <!--Notifications-->
     <link rel="stylesheet" href="./modules/notifications/notifications.css">
     <div id="notification-container"></div>
     <script src="./modules/notifications/notifications.js"></script>
-    <div id="MainLoader" class="loader">
-        <div class="img"></div>
+
+
+
+    <div id="MAIN">
+        <!--AuthPanel (NOT LOADED)-->
+        <div id="auth-panel-container" data-show="false"></div>
     </div>
     <!--Start-->
     <script>

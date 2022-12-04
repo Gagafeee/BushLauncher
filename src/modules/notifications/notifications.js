@@ -68,6 +68,7 @@ class NotificationsManager {
                     this.close(newNotification.dataset.id);
                 }, (delay));
             }
+            return newNotification.id
 
 
         } else {

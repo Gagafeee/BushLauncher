@@ -135,7 +135,7 @@ class AuthenticatorManager {
         return validate(account.data.profile)
     }
     isAccountList() {
-        return this.getAccountList() != [];
+        return !this.getAccountList() === [];
     }
     validateMSAccount(id) {
         return new Promise((resolve, reject) => {
