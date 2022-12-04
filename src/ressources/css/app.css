@@ -39,3 +39,8 @@
     left: 0;
     background-color: var(--bush-background-color);
 }
+
+#MAIN #auth-panel-container {
+    width: 100%;
+    height: 100%;
+}

@@ -1,7 +1,7 @@
 {
     "name": "bush-launcher",
     "productName": "Bush Launcher",
-    "version": "0.3.7",
+    "version": "0.3.8",
     "description": "A Minecraft launcher",
     "main": "src/main.js",
     "author": "Gagafeee",

@@ -10,7 +10,6 @@ class AuthPanel {
         } else {
             //load the html file as container
             $(this.mainContainer).load("./modules/authPanel/panel.html", () => {
-                console.log(this.mainContainer);
                 this.mainContainer.querySelector("#LoginMS").addEventListener("click", () => {
                     this.Login(authProviderType.MICROSOFT)
                 })

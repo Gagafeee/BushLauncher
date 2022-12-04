@@ -5,3 +5,127 @@
     align-items: center;
     justify-content: center;
 }
+
+.authPanel::before {
+    content: "";
+    background-image: url(../../ressources/graphics/backgrounds/underwater.png);
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    width: 100vw;
+    height: 100vh;
+    position: absolute;
+    top: 0;
+    left: 0;
+    filter: blur(2px);
+    z-index: 0;
+}
+.authPanel .content {
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+}
+.authPanel .content .title-container {
+    width: 100%;
+    height: 30%;
+    /*background-color: violet;*/
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.authPanel .content .title-container .img {
+    height: 15vh;
+    width: 15vh;
+    background-image: url(../../ressources/graphics/icon.svg);
+    /*background-color: rebeccapurple;*/
+}   
+.authPanel .content .title-container .textes {
+    height: 15vh;
+}
+
+.authPanel .content .title-container .title {
+    min-width: 60%;
+    max-height: 100%;
+    /*background-color: green;*/
+    font-size: 10vh;
+    font-family: Terabite;
+    word-break: keep-all;
+    margin-top: 3%;
+}
+
+.authPanel .content .title-container .version {
+    margin-top: -2%;
+    font-family: SquareFont;
+    font-weight: 100;
+    font-size: 2vh;
+}
+
+.authPanel .content .login-content {
+    margin-top: 5%;
+    /*background-color: red;*/
+    width: 100%;
+    height: 50%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.authPanel .content .login-content .auth-container {
+    /*background-color: blue;*/
+    width: 90%;
+    height: 70%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.authPanel .content .login-content p {
+    color: var(--text-color);
+    font-family: SquareFont;
+    font-size: 3.5vw;
+}
+
+.authPanel .content .login-content .auth-container .btn-log-microsoft {
+    width: 10vw;
+    height: 10vw;
+    border-radius: 50%;
+    /* From https://css.glass */
+    background: rgba(146, 146, 146, 0.2);
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    border: 1px solid rgba(146, 146, 146, 0.3);
+    transition: all 0.5s;
+    cursor: pointer;
+}
+
+.authPanel .content .login-content .auth-container .btn-log-microsoft .img {
+    background-image: url(../../ressources/graphics/icons/microsoft.svg);
+    width: 90%;
+    height: 90%;
+    position: relative;
+    top: -95%;
+    left: 5%;
+}
+
+.authPanel .content .login-content .auth-container .btn-log-microsoft:hover {
+    transform: scale(1.1);
+}
+
+.authPanel .content .login-content .auth-container .btn-log-microsoft::before {
+    content: "";
+    display: block;
+    width: 10vw;
+    height: 10vw;
+    background: linear-gradient(159deg, rgba(255, 87, 34, 1) 0%, rgba(76, 175, 80, 1) 100%);
+    filter: blur(20px);
+    opacity: 0.4;
+    transition: opacity 0.3s;
+    border-radius: 50%;
+}
+
+.authPanel .content .login-content .auth-container .btn-log-microsoft:hover::before {
+    opacity: 1;
+}
