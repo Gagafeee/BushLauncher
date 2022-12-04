@@ -113,8 +113,8 @@ function UpdateDownloadState(e, percent) {
 
 function Start() {
     const { notificationsManager, NotificationsType } = require('./modules/notifications/notifications');
-
-    const { Authenticator, authProviderType } = require('./modules/authenticator')
+    const { Authenticator, authProviderType } = require('./modules/authenticator');
+    const loader = document.querySelector("#MainLoader");
 
     const Setup = () => {
         return new Promise((resolve, reject) => {
@@ -190,15 +190,15 @@ function Start() {
                     if (isValid) {
                         Authenticator.Login(authProviderType.RAW, account.account).then(() => {
                             Authenticator.SwitchToAccount(account.id);
-                            resolve()
+                            resolve(account)
                         }).catch((err) => {
                             notificationsManager.CreateNotification(NotificationsType.Error, "Cannot loggin: " + err)
                             console.error(err);
-                            reject();
+                            reject(err);
                         })
                     } else {
                         console.error(prefix + "Cannot Validate account");
-                        reject();
+                        reject("Cannot Valid account");
                     }
                 })
 
@@ -217,13 +217,15 @@ function Start() {
     console.log(prefix + "Initializing...");
     Setup().then(() => {
         console.log(prefix + "Login in...");
-        Login().then(() => {
+        Login().then((account) => {
             console.log(prefix + "Loaded Successfully");
-        }).catch(() => {
-            error(prefix + "Cannot load");
+            loader.style.display = "none";
+            notificationsManager.CreateNotification(NotificationsType.Info, "Logged as: " + account.account.username, 5000)
+        }).catch((err) => {
+            console.error(prefix + "Cannot load" + err);
         })
-    }).catch(() => {
-        error(prefix + "Cannot load");
+    }).catch((err) => {
+        console.error(prefix + "Cannot load" + err);
     })
 
 

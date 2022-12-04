@@ -1,0 +1,27 @@
+#MainLoader {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#MainLoader::before {
+    content: "";
+    background-image: url(../graphics/backgrounds/underwater.png);
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    width: 100vw;
+    height: 100vh;
+    position: absolute;
+    top: 0;
+    left: 0;
+    filter: blur(2px)
+}
+
+#MainLoader .img {
+    width: 10vw;
+    height: 10vw;
+    position: relative;
+}
