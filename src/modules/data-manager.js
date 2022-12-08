@@ -22,17 +22,15 @@ class FileManager {
     add(key, val, pos) {
         let list = this.get(key);
         list = (typeof list === "object" ? list : [])
-        console.log(list);
         let newList;
         if (typeof pos === undefined) {
             newList = [...list, val];
-        }else{
+        } else {
             newList = list;
             newList.splice(pos, 0, val);
-            console.log(newList);
         }
-        
-        
+
+
         this.set(key, newList);
     }
     remove(key, id) {
@@ -41,9 +39,9 @@ class FileManager {
         list.splice(id, 1);
         this.set(key, list);
     }
-    replace(key, val, pos){
+    replace(key, val, pos) {
         this.add(key, val, pos);
-        this.remove(key, pos+1);
+        this.remove(key, pos + 1);
     }
 }
 
@@ -62,4 +60,7 @@ function parseDataFile(filePath, defaults) {
 const AccountsFileManager = new FileManager({
     fileName: "AccountList"
 })
-module.exports = { AccountsFileManager }
+const UserFileManager = new FileManager({
+    fileName: "UserSettings"
+})
+module.exports = { AccountsFileManager, UserFileManager }

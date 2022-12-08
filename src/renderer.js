@@ -114,21 +114,90 @@ function UpdateDownloadState(e, percent) {
     text.innerText = "Downloading... [" + percent + "%]";
 }
 //////////////////////////////////////////////////
+const TabList = {
+    VANILLA: {
+        name: "VANILLA",
+        type: "version"
+    },
+    OPTIONS: {
+        name: "OPTIONS",
+        type: "normal"
+    }
+}
+Object.freeze(TabList);
+
 class INTERFACE {
     constructor() {
         const { notificationsManager, NotificationsType } = require('./modules/notifications/notifications');
         const { Authenticator, authProviderType } = require('./modules/authenticator');
-
+        const { UserFileManager } = require('./modules/data-manager');
+        this.UserFileManager = UserFileManager;
         this.isLogged = Authenticator.isAccountLogged();
+        //apply
+        const d = this.getInterfaceData()
+        this.selectedTab = d.tab;
     }
-    setUp(isLogged) {
-        console.log("Loading interface logged: " + isLogged);
-    }
-    SwitchToTab(tab) {
+    setUp() {
+        const { TabSystem } = require('./modules/tabSystem');
+        return new Promise((resolve, reject) => {
+            console.log("Loading interface...");
+            let tabList = []
+                //setUp all tabs
+            Object.entries(TabList).forEach(tabData => {
+                const tab = document.querySelector("#MAIN #TabContainers .tab#" + tabData[1].name);
+                const tabButton = document.querySelector("#MAIN #TabMenu .button#" + tabData[1].name);
+                //verify button
+                if (tabButton == null) {
+                    reject(new Error("Button of " + tabData[1].name + " can't be found"))
+                } else /*verify container*/ if (tab == null) {
+                    reject(new Error("Container " + tabData[1].name + " can't be found"));
+                }
 
+                tabButton.addEventListener("click",()=>{
+                    this.SwitchToTab(tabData)
+                })
+                $(tab).load("./ressources/frames/views/" + tabData[1].name + ".html")
+
+                tabList.push({
+                    button: tabButton,
+                    container: tab,
+                    name: tabData[1].name
+                })
+
+            })
+            const containerTabSystem = new TabSystem(tabList);
+            this.containerTabSystem = containerTabSystem;
+            //select what tab will be displayed
+            const selectedTab = this.getInterfaceData().tab;
+            this.selectedTab = selectedTab;
+            containerTabSystem.switch(selectedTab)
+            
+            //done
+            resolve()
+        })
+
+    }
+    SwitchToTab(tabData) {
+        this.containerTabSystem.switch(tabData[1].name)
+        if(tabData[1].type == "version"){
+            this.SwitchToVersion(/*this.getInterfaceData().selectedVersion*/"1.19.2")
+        }
     }
     SwitchToVersion(version) {
+        console.log("switching to version " + version);
+    }
+    saveInterface() {
+        this.UserFileManager.set("interface", {
+            tab: this.selectedTab
+        })
+    }
+    getInterfaceData() {
+        const interfaceData = this.UserFileManager.get("interface");
+        return interfaceData != undefined ? interfaceData : {
+            //default interface data
+            tab: TabList.VANILLA.name
 
+        }
     }
 }
 
@@ -234,7 +303,7 @@ function Start() {
                 loader.style.display = "none";
                 WaitLogin().then((loggedAccount) => {
 
-                    //Authenticator.login must be called before to set the vars
+                    //Authenticator.login() must be called before to set the vars
                     const account = {
                         id: Authenticator.getLastLoggedAccountId(),
                         account: Authenticator.getAccount(Authenticator.getLastLoggedAccountId())
@@ -249,33 +318,31 @@ function Start() {
     console.log(prefix + "Starting...");
     console.log(prefix + "Initializing...");
     Setup().then(() => {
-        console.log(prefix + "Login in...");
-        Login().then((account) => {
-            notificationsManager.CreateNotification(NotificationsType.Info, "Welcome " + account.account.username, 5000)
+            console.log(prefix + "Login in...");
+            Login().then((account) => {
+                notificationsManager.CreateNotification(NotificationsType.Info, "Welcome " + account.account.username, 5000)
 
-            console.log(prefix + "Preparing Interface...");
-            const interface = new INTERFACE()
-            interface.setUp(account.logged)
+                console.log(prefix + "Preparing Interface...");
+                const interface = new INTERFACE();
+                interface.setUp().then(() => {
+                    console.log(prefix + "Loaded Successfully");
+                    //ALL DONE
+                    setTimeout(() => {
+                        loader.style.display = "none";
+                    }, 2000);
+                }).catch((err) => {
+                    console.error("Cannot Load interface: " + err + err.stack);
+                })
 
-            console.log(prefix + "Loaded Successfully");
-            //ALL DONE
-            setTimeout(() => {
-                loader.style.display = "none";
-            }, 2000);
 
+
+            }).catch((err) => {
+                console.error(prefix + "Cannot load" + err);
+            })
         }).catch((err) => {
             console.error(prefix + "Cannot load" + err);
         })
-    }).catch((err) => {
-        console.error(prefix + "Cannot load" + err);
-    })
-
-
-
-
-
-
-    /**/
+        /**/
 
 }
 

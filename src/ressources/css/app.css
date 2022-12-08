@@ -29,7 +29,6 @@
     z-index: 81;
 }
 
-
 #MAIN {
     width: 100vw;
     height: calc(100vh - 30px);
@@ -38,9 +37,56 @@
     top: 0;
     left: 0;
     background-color: var(--bush-background-color);
+    display: flex;
 }
 
-#MAIN #auth-panel-container {
+#MAIN #auth-panel-container[data-show="false"] {
+    display: none;
+}
+
+#MAIN #auth-panel-container[data-show="true"] {
+    position: absolute;
+    top: 0;
+    bottom: 0;
     width: 100%;
     height: 100%;
+}
+
+
+/*left menu*/
+
+#MAIN #TabMenu {
+    width: 20%;
+    height: 100%;
+    background-color: var(--background-color);
+}
+#MAIN #TabMenu .container {
+    width: 100%;
+    height: calc(100% - 12vh);
+}
+
+#MAIN #TabMenu .button {
+    height: 12vh;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    font-family: SquareFont;
+    cursor: pointer;
+}
+#MAIN #TabMenu .button .img {
+    width: 8vh;
+    height: 8vh;
+}
+
+
+#MAIN #TabMenu .button.selected {
+    background-color: var(--secondary-background-color);
+    cursor: default;
+}
+
+#MAIN #TabContainers {
+    width: 80%;
+    height: 100%;
+    background-color: var(--secondary-background-color);
 }

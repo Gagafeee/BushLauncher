@@ -104,7 +104,7 @@ class AuthenticatorManager {
     }
     getAccountList() {
         const list = this.fileManager.get("account-list");
-        return (typeof list === "object" ? Array.from(list) : [])
+        return (typeof list === "object" ? Array.from(list) : null)
     }
     getAccount(id) {
         return this.getAccountList()[id];
@@ -135,7 +135,7 @@ class AuthenticatorManager {
         return validate(account.data.profile)
     }
     isAccountList() {
-        return !this.getAccountList() === [];
+        return this.getAccountList() != null;
     }
     validateMSAccount(id) {
         return new Promise((resolve, reject) => {
