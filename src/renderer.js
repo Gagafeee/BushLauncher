@@ -156,7 +156,7 @@ class INTERFACE {
                 tabButton.addEventListener("click",()=>{
                     this.SwitchToTab(tabData)
                 })
-                $(tab).load("./ressources/frames/views/" + tabData[1].name + ".html")
+                $(tab.querySelector(".content")).load("./ressources/frames/views/" + tabData[1].name + ".html")
 
                 tabList.push({
                     button: tabButton,

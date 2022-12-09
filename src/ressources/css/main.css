@@ -20,8 +20,10 @@
 
 .theme-dark {
     --background-color: #1E1D1D;
+    --background-color-opacity: hsla(0, 2%, 12%, 0.82);
     --secondary-background-color: #302F2F;
     --hover-background-color: #5A5858;
+    --hover-background-color-opacity: #5a5858b3;
     --bush-background-color: #252D27;
     --text-color: #FFF;
     --unvalid: #932A2A;
@@ -82,12 +84,18 @@ div::-webkit-scrollbar-thumb {
     background: var(--hover-background-color);
     border-radius: 8px;
 }
+
+
 /**/
+
+
 /*Loader*/
+
 .loader {
     width: 100%;
     height: 100%;
 }
+
 .loader .img {
     width: 90%;
     height: 90%;

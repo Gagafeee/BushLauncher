@@ -58,8 +58,17 @@
 #MAIN #TabMenu {
     width: 20%;
     height: 100%;
-    background-color: var(--background-color);
+    background-color: var(--background-color-opacity);
+    /* From https://css.glass */
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(6.8px);
+    -webkit-backdrop-filter: blur(6.8px);
+    border-right: 5px solid var(--bush-primary);
+    border-radius: 0 15px 15px 0;
+    overflow: hidden;
+    z-index: 10;
 }
+
 #MAIN #TabMenu .container {
     width: 100%;
     height: calc(100% - 12vh);
@@ -73,20 +82,57 @@
     justify-content: space-evenly;
     font-family: SquareFont;
     cursor: pointer;
+    border-radius: 15px;
+    transition: background-color 0.3s;
 }
+
+#MAIN #TabMenu .button:hover {
+    background-color: var(--hover-background-color);
+}
+
 #MAIN #TabMenu .button .img {
     width: 8vh;
     height: 8vh;
 }
 
-
 #MAIN #TabMenu .button.selected {
-    background-color: var(--secondary-background-color);
     cursor: default;
+    /* From https://css.glass */
+    background: var(--hover-background-color-opacity);
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(2.4px);
+    -webkit-backdrop-filter: blur(2.4px);
+    border: 1px solid rgba(90, 88, 88, 1) inset;
 }
 
 #MAIN #TabContainers {
     width: 80%;
     height: 100%;
     background-color: var(--secondary-background-color);
+    padding-left: 1vw;
+    position: relative;
+}
+
+#MAIN #TabContainers .tab {
+    width: 100%;
+    height: 100%;
+}
+
+#MAIN #TabContainers .tab .background-image {
+    position: absolute;
+    top: 0;
+    left: -25%;
+    width: 100vw;
+    height: 100%;
+    z-index: 0;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+#MAIN #TabContainers .tab .content {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    z-index: 8;
 }
