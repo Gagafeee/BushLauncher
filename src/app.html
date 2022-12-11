@@ -31,7 +31,7 @@
 
 
 
-    <div id="MAIN">
+    <div id="MAIN" style="display: none;">
         <!--AuthPanel (NOT LOADED)-->
         <div id="auth-panel-container" data-show="false"></div>
         <div id="TabMenu">
@@ -54,6 +54,30 @@
             <div class="tab" id="OPTIONS">
                 <div class="background-image" style="background-image: url(./ressources/graphics/backgrounds/underwater.png)"></div>
                 <div class="content"></div>
+            </div>
+        </div>
+        <div id="account" data-open="false" class="dropdownEVENT">
+            <div class="content">
+                <div class="userData">
+                    <img class="userImage" src="https://mc-heads.net/avatar/notch"></img>
+                    <p class="userName">UserName</p>
+                </div>
+                <div class="arrow">
+                    <div class="img"></div>
+                </div>
+            </div>
+            <div class="dropdown">
+                <div class="scrollable" id="accountList">
+                    <div class="account">
+                        <div class="userData">
+                            <img class="userImage" src="https://mc-heads.net/avatar/notch"></img>
+                            <p class="userName">UserName</p>
+                        </div>
+                        <div class="button-logout">
+                            <div class="img"></div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

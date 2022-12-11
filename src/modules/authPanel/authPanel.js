@@ -6,7 +6,7 @@ class AuthPanel {
         this.callback = callback;
         this.mainContainer = container;
         if (this.mainContainer == undefined) {
-            console.error(prefix + "Cannot Init: Cannot find 'auth-panel-container' div container");
+            console.error(prefix + "Cannot Init: Cannot find " + container + " div container");
         } else {
             //load the html file as container
             $(this.mainContainer).load("./modules/authPanel/panel.html", () => {
@@ -52,6 +52,8 @@ function WaitLogin() {
             CallbackAuthPanel.Close();
             CallbackAuthPanel.Destroy();
         })
+        CallbackAuthPanel.Show();
+        //TODO: If user close the frame reject
     })
 }
 module.exports = { /*MainAuthPanel,*/ WaitLogin };

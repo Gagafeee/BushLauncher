@@ -133,6 +133,7 @@ class INTERFACE {
         const { UserFileManager } = require('./modules/data-manager');
         this.UserFileManager = UserFileManager;
         this.isLogged = Authenticator.isAccountLogged();
+        this.Authenticator = Authenticator;
         //apply
         const d = this.getInterfaceData()
         this.selectedTab = d.tab;
@@ -140,47 +141,67 @@ class INTERFACE {
     setUp() {
         const { TabSystem } = require('./modules/tabSystem');
         return new Promise((resolve, reject) => {
-            console.log("Loading interface...");
-            let tabList = []
-                //setUp all tabs
-            Object.entries(TabList).forEach(tabData => {
-                const tab = document.querySelector("#MAIN #TabContainers .tab#" + tabData[1].name);
-                const tabButton = document.querySelector("#MAIN #TabMenu .button#" + tabData[1].name);
-                //verify button
-                if (tabButton == null) {
-                    reject(new Error("Button of " + tabData[1].name + " can't be found"))
-                } else /*verify container*/ if (tab == null) {
-                    reject(new Error("Container " + tabData[1].name + " can't be found"));
-                }
+            if (this.isLogged) {
 
-                tabButton.addEventListener("click",()=>{
-                    this.SwitchToTab(tabData)
+                console.log("Loading interface...");
+                let tabList = []
+                    //setUp all tabs
+                Object.entries(TabList).forEach(tabData => {
+                    const tab = document.querySelector("#MAIN #TabContainers .tab#" + tabData[1].name);
+                    const tabButton = document.querySelector("#MAIN #TabMenu .button#" + tabData[1].name);
+                    //verify button
+                    if (tabButton == null) {
+                        reject(new Error("Button of " + tabData[1].name + " can't be found"))
+                    } else /*verify container*/ if (tab == null) {
+                        reject(new Error("Container " + tabData[1].name + " can't be found"));
+                    }
+
+                    tabButton.addEventListener("click", () => {
+                        this.SwitchToTab(tabData)
+                    })
+                    $(tab.querySelector(".content")).load("./ressources/frames/views/" + tabData[1].name + ".html")
+
+                    tabList.push({
+                        button: tabButton,
+                        container: tab,
+                        name: tabData[1].name
+                    })
+
                 })
-                $(tab.querySelector(".content")).load("./ressources/frames/views/" + tabData[1].name + ".html")
+                const containerTabSystem = new TabSystem(tabList);
+                this.containerTabSystem = containerTabSystem;
+                //select what tab will be displayed
+                const selectedTab = this.getInterfaceData().tab;
+                this.selectedTab = selectedTab;
+                containerTabSystem.switch(selectedTab)
 
-                tabList.push({
-                    button: tabButton,
-                    container: tab,
-                    name: tabData[1].name
+                //Add event listener to all dropdown 
+                document.querySelectorAll(".dropdownEVENT").forEach(dropdown => {
+                    dropdown.addEventListener("click", () => {
+                        dropdown.dataset.open = (dropdown.dataset.open == "false" ? true : false);
+                    });
+                    dropdown.classList.remove("dropdownEVENT")
                 })
 
-            })
-            const containerTabSystem = new TabSystem(tabList);
-            this.containerTabSystem = containerTabSystem;
-            //select what tab will be displayed
-            const selectedTab = this.getInterfaceData().tab;
-            this.selectedTab = selectedTab;
-            containerTabSystem.switch(selectedTab)
-            
-            //done
-            resolve()
+                //preparing "account" section
+                const accountPanel = document.querySelector("#account");
+                const user = this.Authenticator.getLoggedAccount();
+                accountPanel.querySelector(".content .userName").innerText = user.username;
+                accountPanel.querySelector(".content .userImage").src = "https://mc-heads.net/avatar/" + user.username;
+                console.log(this.Authenticator.getAccountList());
+                //done
+                resolve()
+            } else {
+                console.error(prefix + "Cannot setUp, user no logged");
+                reject()
+            }
         })
 
     }
     SwitchToTab(tabData) {
         this.containerTabSystem.switch(tabData[1].name)
-        if(tabData[1].type == "version"){
-            this.SwitchToVersion(/*this.getInterfaceData().selectedVersion*/"1.19.2")
+        if (tabData[1].type == "version") {
+            this.SwitchToVersion( /*this.getInterfaceData().selectedVersion*/ "1.19.2")
         }
     }
     SwitchToVersion(version) {
@@ -327,8 +348,10 @@ function Start() {
                 interface.setUp().then(() => {
                     console.log(prefix + "Loaded Successfully");
                     //ALL DONE
+                    document.querySelector("#MAIN").style.display = "";
                     setTimeout(() => {
                         loader.style.display = "none";
+
                     }, 2000);
                 }).catch((err) => {
                     console.error("Cannot Load interface: " + err + err.stack);

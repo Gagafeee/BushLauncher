@@ -50,6 +50,7 @@
     bottom: 0;
     width: 100%;
     height: 100%;
+    z-index: 20;
 }
 
 
@@ -102,7 +103,8 @@
     box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
     backdrop-filter: blur(2.4px);
     -webkit-backdrop-filter: blur(2.4px);
-    border: 1px solid rgba(90, 88, 88, 1) inset;
+    box-shadow: inset 0 0 0 1px rgba(90, 88, 88, 1);
+    border: 0;
 }
 
 #MAIN #TabContainers {
@@ -135,4 +137,133 @@
     height: 100%;
     position: relative;
     z-index: 8;
+}
+
+#MAIN #account {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 25vw;
+    height: 10vh;
+    background-color: var(--background-color);
+    border-radius: 0 0 10px 10px;
+    z-index: 11;
+}
+
+#MAIN #account .content {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+}
+
+#MAIN #account .content .userData {
+    width: 80%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+}
+
+#MAIN #account .content .userData .userImage {
+    width: 7vh;
+    height: 7vh;
+    margin-left: 5%;
+    border-radius: 10px;
+}
+
+#MAIN #account .content .userData .userName {
+    width: 60%;
+    text-align: center;
+    margin-left: 2%;
+    font-family: SquareFont;
+    color: var(--text-color);
+}
+
+#MAIN #account .content .arrow {
+    width: 20%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    transition: background-color 0.5s;
+}
+
+#MAIN #account .content .arrow .img {
+    width: 2.5vh;
+    height: 2.5vh;
+    background-image: url(../graphics/icons/arrow_down.svg);
+    transition: transform 0.3s ease-in-out;
+}
+
+#MAIN #account:hover .content .arrow .img,
+#MAIN #account[data-open="true"] .content .arrow .img {
+    transform: translateY(2px);
+}
+
+#MAIN #account .dropdown {
+    width: 100%;
+    height: 300%;
+    position: relative;
+    top: 1vh;
+    left: 0;
+    border-radius: 10px;
+    background-color: var(--background-color);
+    opacity: 1;
+    transition: height 0.3s;
+}
+
+#MAIN #account[data-open="false"] .dropdown {
+    height: 0;
+    opacity: 0;
+}
+
+#MAIN #account .dropdown .scrollable {
+    width: 100%;
+    min-height: 100%;
+    overflow-y: scroll;
+}
+
+#MAIN #account .dropdown .scrollable .account {
+    width: 100%;
+    height: 10vh;
+    background-color: var(--secondary-background-color);
+    display: flex;
+    align-items: center;
+}
+
+#MAIN #account .dropdown .scrollable .account .userData {
+    width: 80%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+}
+
+#MAIN #account .dropdown .scrollable .account .userData .userImage {
+    width: 7vh;
+    height: 7vh;
+    margin-left: 5%;
+    border-radius: 10px;
+}
+
+#MAIN #account .dropdown .scrollable .account .userData .userName {
+    width: 60%;
+    text-align: center;
+    margin-left: 2%;
+    font-family: SquareFont;
+    color: var(--text-color);
+}
+
+#MAIN #account .dropdown .scrollable .account .button-logout {
+    width: 20%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#MAIN #account .dropdown .scrollable .account .button-logout .img {
+    width: 4vh;
+    height: 4vh;
+    background-image: url(../graphics/icons/leave.svg);
 }
