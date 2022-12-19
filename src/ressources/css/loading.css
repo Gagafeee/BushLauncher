@@ -2,14 +2,18 @@
     font-family: SquareFont;
     src: url(../fonts/Square.ttf);
 }
+
 body {
     overflow: hidden;
     user-select: none;
 }
-body:after{
-    position:absolute; z-index:-1;
+
+body:after {
+    position: absolute;
+    z-index: -1;
     content: url(../graphics/icon.svg);
 }
+
 #mainIcon {
     width: 100vw;
     height: 100vh;
@@ -19,6 +23,7 @@ body:after{
     background-position: center;
     animation: popup 1s linear, 1s zoom 1s linear infinite;
 }
+
 #state {
     position: absolute;
     bottom: 0;

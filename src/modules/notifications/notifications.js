@@ -12,7 +12,7 @@ class NotificationsManager {
         console.log(this.prefix + "Loading...");
         //load
         this.container = container;
-        this.container.style.setProperty("--ymargin", "10vh");
+        this.container.style.setProperty("--ymargin", "15vh");
         this.NotificationsList = [];
 
         console.log(this.prefix + "Loaded !");
@@ -37,7 +37,7 @@ class NotificationsManager {
             newNotification.appendChild(icon);
             //contents
             const content = document.createElement("p");
-            content.innerText = text;
+            content.innerHTML = text;
             newNotification.appendChild(content);
             //cross
             const cross = document.createElement("div");
@@ -68,7 +68,7 @@ class NotificationsManager {
                     this.close(newNotification.dataset.id);
                 }, (delay));
             }
-            return newNotification.id
+            return newNotification.dataset.id
 
 
         } else {

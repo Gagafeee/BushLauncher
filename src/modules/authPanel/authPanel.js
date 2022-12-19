@@ -10,8 +10,20 @@ class AuthPanel {
         } else {
             //load the html file as container
             $(this.mainContainer).load("./modules/authPanel/panel.html", () => {
-                this.mainContainer.querySelector("#LoginMS").addEventListener("click", () => {
-                    this.Login(authProviderType.MICROSOFT)
+                const MSButton = this.mainContainer.querySelector("#LoginMS");
+                MSButton.addEventListener("click", () => {
+                    MSButton.querySelector(".img").style.backgroundImage = "url(./ressources/graphics/icons/loading.svg)";
+                    this.Login(authProviderType.MICROSOFT).then(() => {
+                            MSButton.querySelector(".img").style.backgroundImage = "";
+                        })
+                        .catch((err) => {
+                            MSButton.querySelector(".img").style.backgroundImage = "url(./ressources/graphics/icons/close.svg)";
+                            console.error("Cannot return login error:")
+                            console.error(err);
+                            setTimeout(() => {
+                                MSButton.querySelector(".img").style.backgroundImage = "";
+                            }, 4000);
+                        })
                 })
             });
 
@@ -37,9 +49,15 @@ class AuthPanel {
         this.mainContainer.innerHTML = '';
     }
     Login(authProviderType) {
-        Authenticator.AddAccount(authProviderType).then((loggedAccount) => {
-            this.callback(loggedAccount);
+        return new Promise((resolve, reject) => {
+            Authenticator.AddAccount(authProviderType).then((loggedAccount) => {
+                this.callback(loggedAccount);
+                resolve()
+            }).catch((error) => {
+                reject(error);
+            })
         })
+
     }
 
 }
@@ -48,7 +66,8 @@ class AuthPanel {
 function WaitLogin() {
     return new Promise((resolve, reject) => {
         const CallbackAuthPanel = new AuthPanel(document.querySelector("#auth-panel-container"), (loggedAccount) => {
-            resolve(loggedAccount);
+            /*resolved account is already logged, added and selected*/
+            loggedAccount == undefined ? reject("closed by user") : resolve(loggedAccount);
             CallbackAuthPanel.Close();
             CallbackAuthPanel.Destroy();
         })

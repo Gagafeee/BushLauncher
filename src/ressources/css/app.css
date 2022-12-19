@@ -64,10 +64,13 @@
     box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
     backdrop-filter: blur(6.8px);
     -webkit-backdrop-filter: blur(6.8px);
-    border-right: 5px solid var(--bush-primary);
+    border: 5px solid var(--bush-primary);
+    border-left: 0;
     border-radius: 0 15px 15px 0;
     overflow: hidden;
     z-index: 10;
+    position: absolute;
+    top: -5px;
 }
 
 #MAIN #TabMenu .container {
@@ -111,8 +114,8 @@
     width: 80%;
     height: 100%;
     background-color: var(--secondary-background-color);
-    padding-left: 1vw;
-    position: relative;
+    position: absolute;
+    right: 0;
 }
 
 #MAIN #TabContainers .tab {
@@ -137,6 +140,20 @@
     height: 100%;
     position: relative;
     z-index: 8;
+    margin-left: 2%;
+}
+
+#MAIN #TabContainers .tab .content::before {
+    content: "";
+    backdrop-filter: blur(2px) brightness(80%);
+    width: 100%;
+    height: 100%;
+    display: block;
+    /* margin-left: -2%; */
+    position: absolute;
+    top: 0;
+    left: -2%;
+    z-index: -1;
 }
 
 #MAIN #account {
@@ -203,33 +220,55 @@
 
 #MAIN #account .dropdown {
     width: 100%;
-    height: 300%;
+    height: 220%;
     position: relative;
     top: 1vh;
     left: 0;
     border-radius: 10px;
     background-color: var(--background-color);
     opacity: 1;
-    transition: height 0.3s;
+    overflow: hidden;
+    transition: all 0.3s;
+    padding: 0.5vh 0 0.5vh 0;
 }
 
 #MAIN #account[data-open="false"] .dropdown {
     height: 0;
-    opacity: 0;
+    overflow: hidden;
+    border-radius: inherit;
+    padding: 0;
+}
+
+#MAIN #account .dropdown .loader .img {
+    width: 20%;
+    height: 20%;
 }
 
 #MAIN #account .dropdown .scrollable {
     width: 100%;
-    min-height: 100%;
-    overflow-y: scroll;
+    height: 100%;
+    overflow-y: auto;
+    overflow-x: hidden;
+    border-radius: inherit;
+    display: flex;
+    flex-direction: column;
 }
 
-#MAIN #account .dropdown .scrollable .account {
-    width: 100%;
-    height: 10vh;
+#MAIN #account .dropdown .scrollable .account,
+#MAIN #account .dropdown .scrollable .addAccount {
+    width: 96%;
+    height: 9.8vh;
     background-color: var(--secondary-background-color);
     display: flex;
     align-items: center;
+    margin: 0.5vh 0 0.5vh 2%;
+    border-radius: 10px;
+    overflow: hidden;
+    flex: none;
+}
+
+#MAIN #account .dropdown .scrollable .account.logged {
+    background-color: var(--hover-background-color);
 }
 
 #MAIN #account .dropdown .scrollable .account .userData {
@@ -237,6 +276,11 @@
     height: 100%;
     display: flex;
     align-items: center;
+    transition: all 0.2s;
+}
+
+#MAIN #account .dropdown .scrollable .account:not(.logged) .userData:hover {
+    background-color: var(--hover-background-color);
 }
 
 #MAIN #account .dropdown .scrollable .account .userData .userImage {
@@ -260,10 +304,27 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    background-color: var(--unvalid);
+    border-radius: 0 10px 10px 0;
 }
 
 #MAIN #account .dropdown .scrollable .account .button-logout .img {
     width: 4vh;
     height: 4vh;
     background-image: url(../graphics/icons/leave.svg);
+}
+
+#MAIN #account .dropdown .scrollable .addAccount {
+    justify-content: center;
+}
+
+#MAIN #account .dropdown .scrollable .addAccount .img {
+    background-image: url(../graphics/icons/plus.svg);
+    width: 50%;
+    height: 50%;
+    transition: all 0.2s;
+}
+
+#MAIN #account .dropdown .scrollable .addAccount:hover .img {
+    transform: scale(1.4);
 }

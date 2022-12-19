@@ -131,6 +131,8 @@ class INTERFACE {
         const { notificationsManager, NotificationsType } = require('./modules/notifications/notifications');
         const { Authenticator, authProviderType } = require('./modules/authenticator');
         const { UserFileManager } = require('./modules/data-manager');
+        const { WaitLogin } = require('./modules/authPanel/authPanel');
+        this.WaitLogin = WaitLogin;
         this.UserFileManager = UserFileManager;
         this.isLogged = Authenticator.isAccountLogged();
         this.Authenticator = Authenticator;
@@ -185,10 +187,95 @@ class INTERFACE {
 
                 //preparing "account" section
                 const accountPanel = document.querySelector("#account");
-                const user = this.Authenticator.getLoggedAccount();
-                accountPanel.querySelector(".content .userName").innerText = user.username;
-                accountPanel.querySelector(".content .userImage").src = "https://mc-heads.net/avatar/" + user.username;
-                console.log(this.Authenticator.getAccountList());
+                const accountDropdownContainer = accountPanel.querySelector("#accountList")
+                const loader = accountPanel.querySelector(".loader");
+
+                const RefreshAccountList = () => {
+                    loader.style.display = "";
+                    console.log(prefix + "Refreshing account list");
+                    const user = this.Authenticator.getLoggedAccount();
+                    accountPanel.querySelector(".content .userName").innerText = user.username;
+                    accountPanel.querySelector(".content .userImage").src = "https://mc-heads.net/avatar/" + user.username;
+                    const accountList = this.Authenticator.getAccountList();
+                    const loggedAccountId = this.Authenticator.getLoggedAccountId();
+                    accountDropdownContainer.innerHTML = "";
+                    for (let i = 0; i < accountList.length; i++) {
+                        const newAccountCard = document.createElement("div");
+                        newAccountCard.className = "account";
+
+                        const userData = document.createElement("div");
+                        userData.className = "userData";
+
+                        if (i == loggedAccountId) {
+                            newAccountCard.classList.add("logged");
+                            newAccountCard.style.order = -1;
+                            newAccountCard.addEventListener("click", () => {
+                                //invert the state to let the accountPanel open
+                                accountPanel.dataset.open = (accountPanel.dataset.open == "false" ? true : false);
+                            })
+                        } else {
+                            userData.addEventListener("click", () => {
+                                //invert the state to let the accountPanel open
+                                accountPanel.dataset.open = (accountPanel.dataset.open == "false" ? true : false);
+                                loader.style.display = "";
+                                this.Authenticator.SwitchToAccount(i).then(() => {
+                                    RefreshAccountList()
+                                    loader.style.display = "none";
+                                }).catch((err) => {
+                                    //if err == undefined, user closed popup
+                                    RefreshAccountList()
+                                    loader.style.display = "none";
+                                })
+                            })
+                        }
+                        const userImage = document.createElement("img");
+                        userImage.className = "userImage";
+                        userImage.src = "https://mc-heads.net/avatar/" + accountList[i].username;
+                        userData.appendChild(userImage);
+                        const userName = document.createElement("div");
+                        userName.className = "userName";
+                        userName.innerText = accountList[i].username;
+                        userData.appendChild(userName);
+                        newAccountCard.appendChild(userData);
+                        if (i != loggedAccountId) {
+                            const btnLogout = document.createElement("div");
+                            btnLogout.className = "button-logout";
+                            btnLogout.addEventListener("click", () => {
+                                //invert the state to let the accountPanel open
+                                accountPanel.dataset.open = (accountPanel.dataset.open == "false" ? true : false);
+                                this.Authenticator.RemoveAccount(i);
+                                RefreshAccountList();
+                            })
+                            const btnLogoutImg = document.createElement("div");
+                            btnLogoutImg.className = "img";
+                            btnLogout.appendChild(btnLogoutImg);
+                            newAccountCard.appendChild(btnLogout);
+                        }
+                        accountDropdownContainer.appendChild(newAccountCard);
+                    }
+                    //add the "add account" card
+                    const addAccountCard = document.createElement("div");
+                    addAccountCard.className = "addAccount";
+                    addAccountCard.addEventListener("click", () => {
+                        //invert the state to let the accountPanel open
+                        accountPanel.dataset.open = (accountPanel.dataset.open == "false" ? true : false);
+                        addAccountCard.querySelector(".img").style.backgroundImage = "url(./ressources/graphics/icons/loading.svg)"
+                        this.WaitLogin().then((loggedAccount) => {
+                            addAccountCard.querySelector(".img").style.backgroundImage = ""
+                            RefreshAccountList();
+                        })
+                    })
+                    const addAccountCardImg = document.createElement("div");
+                    addAccountCardImg.className = "img";
+                    addAccountCard.appendChild(addAccountCardImg)
+                    accountDropdownContainer.appendChild(addAccountCard);
+
+                    loader.style.display = "none";
+                }
+                RefreshAccountList();
+
+
+
                 //done
                 resolve()
             } else {
@@ -284,13 +371,31 @@ function Start() {
                         if (!Authenticator.isAccountValid(account.account)) {
                             //user must reconnect to his account
                             console.log(prefix + processPrefix + "Selected Account no longer valid, waiting for reconect");
-                            const notificationId = notificationsManager.CreateNotification(NotificationsType.Info, "Please re-authenticate your account: " + account.account.username)
-                            Authenticator.validateMSAccount(account.id).then(() => {
+                            const notificationId = notificationsManager.CreateNotification(NotificationsType.Info, "Please re-authenticate your account: <strong>" + account.account.username + "</strong>");
+                            Authenticator.validateAccount(account.id).then(() => {
                                 notificationsManager.close(notificationId);
                                 resolve(true)
                             }).catch((err) => {
-                                console.error(err);
-                                resolve(false);
+                                if (err.code == -1) {
+                                    //popup was closed by user
+                                    //user don't want to reauthenticate his account
+                                    loader.style.display = "";
+                                    document.querySelector("#MAIN").style.display = "";
+                                    WaitLogin().then((loggedAccount) => {
+                                        //Authenticator.login() must be called before to set the vars
+                                        const account = {
+                                            id: Authenticator.getLastLoggedAccountId(),
+                                            account: Authenticator.getAccount(Authenticator.getLastLoggedAccountId())
+                                        }
+                                        loader.style.display = "";
+                                        resolve(account)
+                                    }).catch((reason) => {
+                                        console.error(prefix + processPrefix + "Cannot return login because: " + reason.message);
+                                    })
+                                } else {
+                                    console.error(err);
+                                    resolve(false);
+                                }
                             });
                         } else {
                             console.log(prefix + processPrefix + "Account already valid");
@@ -307,7 +412,7 @@ function Start() {
                             Authenticator.SwitchToAccount(account.id);
                             resolve(account);
                         }).catch((err) => {
-                            notificationsManager.CreateNotification(NotificationsType.Error, "Cannot loggin: " + err)
+                            notificationsManager.CreateNotification(NotificationsType.Error, "Cannot login: " + err)
                             console.error(err);
                             reject(err);
                         })
@@ -322,15 +427,17 @@ function Start() {
             } else {
                 console.log(prefix + processPrefix + "No account exists");
                 loader.style.display = "none";
+                document.querySelector("#MAIN").style.display = "";
                 WaitLogin().then((loggedAccount) => {
-
                     //Authenticator.login() must be called before to set the vars
                     const account = {
                         id: Authenticator.getLastLoggedAccountId(),
                         account: Authenticator.getAccount(Authenticator.getLastLoggedAccountId())
                     }
-                    resolve(account)
                     loader.style.display = "";
+                    resolve(account)
+                }).catch((reason) => {
+                    console.error(prefix + processPrefix + "Cannot return login because: " + reason.message);
                 })
             }
         })
@@ -341,7 +448,7 @@ function Start() {
     Setup().then(() => {
             console.log(prefix + "Login in...");
             Login().then((account) => {
-                notificationsManager.CreateNotification(NotificationsType.Info, "Welcome " + account.account.username, 5000)
+                notificationsManager.CreateNotification(NotificationsType.Info, "Welcome <strong>" + account.account.username + "</strong>", 5000)
 
                 console.log(prefix + "Preparing Interface...");
                 const interface = new INTERFACE();
@@ -354,16 +461,18 @@ function Start() {
 
                     }, 2000);
                 }).catch((err) => {
-                    console.error("Cannot Load interface: " + err + err.stack);
+                    console.error("Cannot Load interface: " + err);
                 })
 
 
 
             }).catch((err) => {
-                console.error(prefix + "Cannot load" + err);
+                console.error(prefix + "Cannot load:");
+                console.error(err);
             })
         }).catch((err) => {
-            console.error(prefix + "Cannot load" + err);
+            console.error(prefix + "Cannot load:");
+            console.error(err);
         })
         /**/
 
