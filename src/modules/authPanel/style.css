@@ -20,11 +20,13 @@
     filter: blur(2px);
     z-index: 0;
 }
+
 .authPanel .content {
     width: 100%;
     height: 100%;
     z-index: 1;
 }
+
 .authPanel .content .title-container {
     width: 100%;
     height: 30%;
@@ -39,7 +41,8 @@
     width: 15vh;
     background-image: url(../../ressources/graphics/icon.svg);
     /*background-color: rebeccapurple;*/
-}   
+}
+
 .authPanel .content .title-container .textes {
     height: 15vh;
 }
@@ -58,7 +61,7 @@
     margin-top: -2%;
     font-family: SquareFont;
     font-weight: 100;
-    font-size: 2vh;
+    font-size: var(--normal-size);
 }
 
 .authPanel .content .login-content {
@@ -84,7 +87,7 @@
 .authPanel .content .login-content p {
     color: var(--text-color);
     font-family: SquareFont;
-    font-size: 3.5vw;
+    font-size: var(--big-size)
 }
 
 .authPanel .content .login-content .auth-container .btn-log-microsoft {

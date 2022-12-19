@@ -25,8 +25,8 @@ let mainWindow
 function createMainWindow() {
 
     const window = new BrowserWindow({
-        width: 800,
-        height: 550,
+        width: 1084,
+        height: 670,
         minWidth: 800,
         minHeight: 550,
         center: true,
@@ -41,6 +41,7 @@ function createMainWindow() {
         transparent: true,
         frame: false
     })
+    window.setResizable(false)
     window.loadFile('src/loading.html');
 
     if (isDevelopment) {
@@ -58,18 +59,18 @@ function createMainWindow() {
         })
     })
     ipcMain.on('minimize-window', () => {
-        BrowserWindow.getFocusedWindow().minimize();
-    })
-
-    ipcMain.handle("isWindowMaximized", async() => {
-        return BrowserWindow.getFocusedWindow().isMaximized();
-    })
-    ipcMain.on('maximize-window', () => {
-        BrowserWindow.getFocusedWindow().maximize();
-    })
-    ipcMain.on('unmaximize-window', () => {
-        BrowserWindow.getFocusedWindow().unmaximize();
-    })
+            BrowserWindow.getFocusedWindow().minimize();
+        })
+        /*
+            ipcMain.handle("isWindowMaximized", async() => {
+                return BrowserWindow.getFocusedWindow().isMaximized();
+            })
+            ipcMain.on('maximize-window', () => {
+                BrowserWindow.getFocusedWindow().maximize();
+            })
+            ipcMain.on('unmaximize-window', () => {
+                BrowserWindow.getFocusedWindow().unmaximize();
+            })*/
     ipcMain.handle("getVersion", () => {
         return app.getVersion();
     })
@@ -92,7 +93,7 @@ app.on('window-all-closed', () => {
 app.on('ready', () => {
     setTimeout(() => {
         mainWindow = createMainWindow();
-        ipcMain.on("starting:ChekedForUpdate", () => {
+        ipcMain.on("starting:CheckedForUpdate", () => {
             mainWindow.loadFile("./src/app.html");
         })
     }, 300);

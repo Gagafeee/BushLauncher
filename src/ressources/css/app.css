@@ -31,8 +31,8 @@
 
 #MAIN {
     width: 100vw;
-    height: calc(100vh - 30px);
-    margin-top: 30px;
+    height: calc(100vh - 40px);
+    margin-top: 40px;
     position: absolute;
     top: 0;
     left: 0;
@@ -97,6 +97,11 @@
 #MAIN #TabMenu .button .img {
     width: 8vh;
     height: 8vh;
+}
+#MAIN #TabMenu .button p {
+    font-size: var(--normal-size);
+    color: var(--text-color);
+    font-family: SquareFont;
 }
 
 #MAIN #TabMenu .button.selected {
@@ -194,6 +199,7 @@
     margin-left: 2%;
     font-family: SquareFont;
     color: var(--text-color);
+    font-size: var(--normal-size);
 }
 
 #MAIN #account .content .arrow {
@@ -296,6 +302,7 @@
     margin-left: 2%;
     font-family: SquareFont;
     color: var(--text-color);
+    font-size: var(--normal-size);
 }
 
 #MAIN #account .dropdown .scrollable .account .button-logout {

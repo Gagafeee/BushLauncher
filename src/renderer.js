@@ -53,7 +53,7 @@ function preLoad() {
                 })
                 loaded = true;
                 setTimeout(() => {
-                    ipcRenderer.postMessage("starting:ChekedForUpdate");
+                    ipcRenderer.postMessage("starting:CheckedForUpdate");
                 }, 2000);
 
 
@@ -326,18 +326,18 @@ function Start() {
                 })
                 //
                 /*Loading menu */
-            document.querySelector("#MENU").addEventListener("dblclick", () => {
+            /*document.querySelector("#MENU").addEventListener("dblclick", () => {
                 ipcRenderer.invoke("isWindowMaximized").then((isMaximized) => {
                     ipcRenderer.postMessage(isMaximized ? "unmaximize-window" : "maximize-window");
                 })
-            })
+            })*/
             document.querySelector("#close-btn").addEventListener("click", () => {
                 ipcRenderer.postMessage("closeApp");
             });
             document.querySelector("#minimize-btn").addEventListener("click", () => {
                 ipcRenderer.postMessage("minimize-window");
             })
-            document.querySelector("#max-unmax-btn").addEventListener("click", () => {
+            /*document.querySelector("#max-unmax-btn").addEventListener("click", () => {
                 const icon = document.querySelector("#max-unmax-btn").firstElementChild;
                 ipcRenderer.invoke("isWindowMaximized").then((isMaximized) => {
                     ipcRenderer.postMessage(isMaximized ? "unmaximize-window" : "maximize-window");
@@ -352,7 +352,7 @@ function Start() {
                 })
 
 
-            })
+            })*/
             resolve()
         })
     }

@@ -86,14 +86,14 @@
 }
 
 .notifications p {
-    font-size: 2.5vw;
+    font-size: var(--normal-size);
     font-weight: 500;
     white-space: nowrap;
     font-family: SquareFont;
 }
 
 .notifications p strong {
-    font-size: 2.7vw;
+    font-size: var(--normal-size);
     font-weight: 700;
     margin-right: 10px;
     color: var(--notifications-color);
